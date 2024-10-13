@@ -1,0 +1,16 @@
+
+
+
+{% extends "general/basel.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <form method="POST" action="" novalidate>
+        {% csrf_token %}
+        {{ form.media }}
+        {{ form|crispy }}
+        <button type="submit" name = 'Submit'>Save</button>
+    </form>
+    
+{% endblock content %}
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>{% endblock extra_js %}

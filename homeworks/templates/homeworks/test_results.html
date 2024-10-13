@@ -1,0 +1,54 @@
+{% extends "general/basel.html" %}
+{% load static %}
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    .correct {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+    .incorrect {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+</style>
+
+<div class="container mt-4">
+    <h1 class="mb-4">Test Results: {{ test_attempt.test.title }}</h1>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title">Score: {{ test_attempt.score|floatformat:2 }}%</h2>
+            <p class="card-text">Date: {{ test_attempt.timestamp|date:"F d, Y H:i" }}</p>
+        </div>
+    </div>
+
+    {% for result in results %}
+    <div class="card mb-4 {% if result.is_correct %}correct{% else %}incorrect{% endif %}">
+        <div class="card-body">
+            <h5 class="card-title">Question {{ forloop.counter }}</h5>
+            <p class="card-text">{{ result.question|safe }}</p>
+            <p><strong>Your answer:</strong> {{ result.selected_answer }}</p>
+            <p><strong>Correct answer:</strong> {{ result.correct_answer }}</p>
+            <p><strong>Status:</strong> 
+                {% if result.is_correct %}
+                <span class="text-success">Correct</span>
+                {% else %}
+                <span class="text-danger">Incorrect</span>
+                {% endif %}
+            </p>
+            {% if not result.is_correct and result.question.explanation %}
+            <div class="mt-3">
+                <h6>Explanation:</h6>
+                <p>{{ result.question.explanation }}</p>
+            </div>
+            {% endif %}
+            <a href="{% url 'question-detail' result.pk %}" class="btn btn-outline-success">In Detail</a>
+        </div>
+    </div>
+    {% endfor %}
+
+    <a href="{% url 'test-list' %}" class="btn btn-primary mb-4">Back to Test List</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock content %}

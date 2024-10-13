@@ -1,0 +1,9 @@
+{% extends 'general/basel.html' %}
+
+{% block content %}
+    <h2>Logged Out</h2>
+    <p>You have been successfully logged out.</p>
+    <a href="{% url 'login' %}">Log in again</a>
+{% endblock %}
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>{% endblock extra_js %}

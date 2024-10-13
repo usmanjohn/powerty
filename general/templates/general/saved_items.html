@@ -1,0 +1,151 @@
+{% extends "general/basel.html" %} {% load static %} 
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>{% endblock extra_js %}
+{% block content %}
+<style>
+  body {
+    background-color: #f8f9fa;
+  }
+  .search-section {
+    margin-bottom: 2rem;
+  }
+  .search-results {
+    height: 300px;
+    overflow-y: auto;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  .result-item {
+    padding: 0.5rem;
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.3s;
+  }
+  .result-item:hover {
+    background-color: #f1f3f5;
+  }
+  .result-item a {
+    color: #495057;
+    text-decoration: none;
+  }
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #343a40;
+  }
+  .section-count {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 0.25rem 0.5rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+  }
+</style>
+
+<div class="container mt-4">
+  <h4 class="mb-4 text-center" style="color: #343a40">Saqlanganlar</h4>
+
+  <div class="row">
+    <div class="col-md-4 search-section">
+      <div class="section-header">
+        <span class="section-title">Topics</span>
+        <span class="section-count">{{ saved_topics|length }}</span>
+      </div>
+      <div class="search-results card">
+        <div class="card-body">
+          {% if saved_topics %} {% for topic in saved_topics %}
+          <div class="result-item">
+            <a href="{% url 'topic-detail' topic.topic.pk %}" 
+              >{{ topic.topic.topic_title }}</a
+            >
+          </div>
+          {% endfor %} {% else %}
+          <p class="text-muted">No saved topics.</p>
+          {% endif %}
+        </div>
+      </div>
+    
+    </div>
+    <div class="col-md-4 search-section">
+        <div class="section-header">
+          <span class="section-title">Tutorials</span>
+          <span class="section-count">{{ saved_tutorials|length }}</span>
+        </div>
+        <div class="search-results card">
+          <div class="card-body">
+            {% if saved_tutorials %} {% for tutorial in saved_tutorials %}
+            <div class="result-item">
+              <a href="{% url 'tutorial-detail' tutorial.tutorial.pk %}"
+                >{{ tutorial.tutorial.title }}</a
+              >
+            </div>
+            {% endfor %} {% else %}
+            <p class="text-muted">No saved tutorials.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 search-section">
+        <div class="section-header">
+          <span class="section-title">Homeworks</span>
+          <span class="section-count">{{ saved_tests|length }}</span>
+        </div>
+        <div class="search-results card">
+          <div class="card-body">
+            {% if saved_tests %}
+    {% for test_attempt in saved_tests %}
+    <div class="card mb-2">
+        <div class="card-body p-2">
+            <h5 class="card-title">{{ test_attempt.test.title }}</h5>
+            <div class="d-flex justify-content-between align-items-center">
+                <span>Latest Score: {{ test_attempt.score|floatformat:2 }}%</span>
+                <a href="{% url 'test-results' test_attempt.pk %}" class="btn btn-sm btn-outline-primary">View</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+{% else %}
+    <p class="text-muted">No homeworks done.</p>
+{% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 search-section">
+        <div class="section-header">
+          <span class="section-title">Practice</span>
+          <span class="section-count">{{ saved_practice|length }}</span>
+        </div>
+        <div class="search-results card">
+          <div class="card-body">
+            {% if saved_practice %}
+    {% for practice_attempt in practice_tests %}
+    <div class="card mb-2">
+        <div class="card-body p-2">
+            <h5 class="card-title">{{ practice_attempt.test.title }}</h5>
+            <div class="d-flex justify-content-between align-items-center">
+                <span>Latest Score: {{ practice_attempt.score|floatformat:2 }}%</span>
+                <a href="{% url 'practice-results' practice_attempt.pk %}" class="btn btn-sm btn-outline-primary">View</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    
+{% else %}
+    <p class="text-muted">No practice done.</p>
+{% endif %}
+          </div>
+        </div>
+      </div>
+  </div>
+
+  
+</div>
+{% endblock %}

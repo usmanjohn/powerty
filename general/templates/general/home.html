@@ -1,0 +1,162 @@
+{% extends "general/basel.html" %}
+{% load static %}
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock extra_js %}
+
+{% block content %}
+<style>
+    .card-body {
+        max-height: none;
+    }
+    .card {
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    }
+    /* Light Gradient Backgrounds */
+    .bg-primary-light {
+        background: linear-gradient(to bottom right, #a8c0ff, #3f2b96);
+        color: white;
+    }
+    .bg-success-light {
+        background: linear-gradient(to bottom right, #c3e9ca, #a8dadc);
+        color: #155724;
+    }
+    .bg-warning-light {
+        background: linear-gradient(to bottom right, #ffe29f, #ffa751);
+        color: #856404;
+    }
+    .bg-info-light {
+        background: linear-gradient(to bottom right, #cfd9df, #e2ebf0);
+        color: #0c5460;
+    }
+    .list-group-item {
+        border: none;
+        border-bottom: 1px solid #e9ecef;
+    }
+    .list-group-item:last-child {
+        border-bottom: none;
+    }
+    .btn-custom {
+        width: 100%;
+        text-align: center;
+    }
+    /* Responsive Adjustments */
+    @media (max-width: 767.98px) {
+        .card-footer {
+            padding-top: 0;
+        }
+    }
+</style>
+
+<div class="container mt-4">
+    <h1 class="text-center mb-5">Welcome to GMAT Prep</h1>
+
+    <div class="row g-4">
+        <!-- Topics Section -->
+        <div class="col-lg-6">
+            <div class="card h-100" onclick="window.location='{% url 'topics-list' %}';" style="cursor: pointer;">
+                <div class="card-header bg-primary-light">
+                    <h2 class="h5 mb-0">Latest Topics</h2>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for topic in topics|slice:":3" %}
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ topic.topic_title }}</h5>
+                                    <small>{{ topic.topic_pub_date|date:"M d, Y" }}</small>
+                                </div>
+                                <p class="mb-1">{{ topic.topic_body|striptags|truncatechars:100 }}</p>
+                                <small>By {{ topic.topic_author.username }} | {{ topic.topic_category }} | {{ topic.upvotes }} upvotes</small>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <button class="btn btn-primary btn-custom">View All Topics</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Homeworks (Tests) Section -->
+        <div class="col-lg-6">
+            <div class="card h-100" onclick="window.location='{% url 'test-list' %}';" style="cursor: pointer;">
+                <div class="card-header bg-success-light">
+                    <h2 class="h5 mb-0">Latest Homeworks</h2>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for test in tests|slice:":3" %}
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ test.title }}</h5>
+                                    <small>{{ test.questions.count }} questions</small>
+                                </div>
+                                <p class="mb-1">{{ test.description|truncatechars:100 }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <button class="btn btn-success btn-custom">View All Homeworks</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Practice Section -->
+        <div class="col-lg-6">
+            <div class="card h-100" onclick="window.location='{% url 'practice-list' %}';" style="cursor: pointer;">
+                <div class="card-header bg-warning-light">
+                    <h2 class="h5 mb-0">Practice Sets</h2>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for practice_set in practice|slice:":3" %}
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ practice_set.title }}</h5>
+                                    <small>{{ practice_set.practice_questions.count }} questions</small>
+                                </div>
+                                <p class="mb-1">{{ practice_set.description|truncatechars:100 }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <button class="btn btn-warning btn-custom">View All Practice Sets</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tutorials Section -->
+        <div class="col-lg-6">
+            <div class="card h-100" onclick="window.location='{% url 'tutorial-list' %}';" style="cursor: pointer;">
+                <div class="card-header bg-info-light">
+                    <h2 class="h5 mb-0">Latest Tutorials</h2>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for tutorial in tutorials|slice:":3" %}
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ tutorial.title }}</h5>
+                                    <small>{{ tutorial.date|date:"M d, Y" }}</small>
+                                </div>
+                                <p class="mb-1">{{ tutorial.short_description|truncatechars:100 }}</p>
+                                <small>By {{ tutorial.author.username }} | {{ tutorial.category }}</small>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <button class="btn btn-info btn-custom">View All Tutorials</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

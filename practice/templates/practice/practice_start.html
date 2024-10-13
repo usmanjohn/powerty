@@ -1,0 +1,63 @@
+{% extends "general/basel.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Test Title -->
+    <div class="text-center mb-5">
+        <h1 class="display-4">{{ test.title }}</h1>
+        <p class="lead">Please read each question carefully and select the best answer.</p>
+    </div>
+
+
+    <!-- Test Form -->
+    <form method="post" action="{% url 'submit-practice' test.id %}">
+        {% csrf_token %}
+        {% for question in questions %}
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0">Question {{ forloop.counter }}</h5>
+            </div>
+            <div class="card-body">
+                <!-- Question Text -->
+                <p class="card-text">{{ question.question_text|safe }}</p>
+
+                <!-- Optional Image -->
+                {% if question.image %}
+                <div class="mb-3 text-center">
+                    <img src="{{ question.image.url }}" alt="Question Image" class="img-fluid rounded">
+                </div>
+                {% endif %}
+
+                <!-- Optional Link -->
+                
+
+                <!-- Choices -->
+                <div class="mt-3">
+                    {% for i in '12345'|make_list %}
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="question_{{ question.id }}" id="choice{{ i }}_{{ question.id }}" value="{{ i }}" required>
+                        <label class="form-check-label" for="choice{{ i }}_{{ question.id }}">
+                            {% if i == '1' %}{{ question.choice1 }}
+                            {% elif i == '2' %}{{ question.choice2 }}
+                            {% elif i == '3' %}{{ question.choice3 }}
+                            {% elif i == '4' %}{{ question.choice4 }}
+                            {% elif i == '5' %}{{ question.choice5 }}
+                            {% endif %}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- Submit Button -->
+        <div class="text-center">
+            <button type="submit" class="btn btn-success btn-lg">
+                <i class="bi bi-check-circle"></i> Submit Test
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock content %}

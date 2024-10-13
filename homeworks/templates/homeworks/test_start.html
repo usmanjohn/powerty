@@ -1,0 +1,40 @@
+{% extends "general/basel.html" %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">{{ test.title }}</h1>
+    <form method="post" action="{% url 'submit-test' test.id %}">
+        {% csrf_token %}
+        {% for question in questions %}
+        <div class="card mb-4 question-card">
+            <div class="card-body">
+                <h5 class="card-title">Question {{ forloop.counter }}</h5>
+                <p class="card-text">{{ question.question_text|safe }}</p>
+                {% if question.image %}
+                <img src="{{ question.image.url }}" alt="Question Image" class="img-fluid mb-3">
+                {% endif %}
+                {% if question.link %}
+                <p><a href="{{ question.link }}" target="_blank" class="btn btn-sm btn-outline-info">Additional Resource</a></p>
+                {% endif %}
+                <div class="mt-3">
+                    {% for i in '12345'|make_list %}
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="question_{{ question.id }}" id="choice{{ i }}_{{ question.id }}" value="{{ i }}" required>
+                        <label class="form-check-label" for="choice{{ i }}_{{ question.id }}">
+                            {% if i == '1' %}{{ question.choice1 }}
+                            {% elif i == '2' %}{{ question.choice2 }}
+                            {% elif i == '3' %}{{ question.choice3 }}
+                            {% elif i == '4' %}{{ question.choice4 }}
+                            {% elif i == '5' %}{{ question.choice5 }}
+                            {% endif %}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary btn-lg mb-4">Submit Test</button>
+    </form>
+</div>
+{% endblock content %}

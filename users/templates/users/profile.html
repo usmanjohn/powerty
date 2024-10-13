@@ -1,0 +1,214 @@
+{% extends 'general/basel.html' %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+    .profile-header {
+        background-color: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    }
+    .profile-image {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border: 5px solid #ffffff;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    }
+    .section-column {
+        height: calc(100vh - 350px);
+        overflow-y: auto;
+    }
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+        margin-bottom: 1rem;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    .section-title {
+        border-left: 5px solid #007bff;
+        padding-left: 10px;
+        margin-bottom: 1rem;
+    }
+    .topic-image, .answer-image {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+    }
+    .truncate-text {
+        display: -webkit-box;
+        
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .icon-text {
+        display: flex;
+        align-items: center;
+    }
+    .icon-text i {
+        margin-right: 0.5rem;
+    }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Profile Header -->
+    <div class="row mb-5 profile-header p-4">
+        <div class="col-md-3 text-center">
+            <img src="{{ profile_user.userprofile.image.url }}" 
+                 alt="{{ profile_user.email }}'s profile picture" 
+                 class="img-fluid rounded-circle profile-image mb-3">
+        </div>
+        <div class="col-md-9">
+            <h2 class="mb-3">
+                <i class="bi bi-person-circle me-2"></i>
+                {{ profile_user.userprofile.username }}
+            </h2>
+            <p class="icon-text"><i class="bi bi-envelope"></i> {{ profile_user.email }}</p>
+            <p class="icon-text"><i class="bi bi-calendar-check"></i> Member since: {{ profile_user.userprofile.date }}</p>
+            <p class="icon-text"><i class="bi bi-person-lines-fill"></i> {{ profile_user.userprofile.bio }}</p>
+            {% if is_own_profile %}
+            <a href="{% url 'update-profile' user.email %}" class="btn btn-primary mt-3">
+                <i class="bi bi-pencil-square"></i> Update Profile
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Three-column layout for Topics, Answers, and Tutorials -->
+    <div class="row">
+        <!-- Topics Section -->
+        <div class="col-md-4">
+            <h3 class="section-title">
+                <i class="bi bi-chat-left-text me-2"></i>Topics
+            </h3>
+            <div class="section-column">
+                {% for topic in topics %}
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="{{ topic.topic_author.userprofile.image.url }}" 
+                                 alt="{{ topic.topic_author.username }}'s profile picture"
+                                 class="rounded-circle topic-image me-3">
+                            <div>
+                                <h5 class="card-title mb-0">
+                                    <a href="{% url 'topic-detail' topic.id %}" class="text-decoration-none">{{ topic.topic_title }}</a>
+                                </h5>
+                                <small class="text-muted">
+                                    <i class="bi bi-clock me-1"></i>
+                                    {{ topic.topic_pub_date|timesince }} ago
+                                </small>
+                            </div>
+                        </div>
+                        <p class="card-text truncate-text">{{ topic.topic_body }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-hand-thumbs-up"></i> {{ topic.upvotes }}</span>
+                            <a href="{% url 'topic-detail' topic.id %}" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-arrow-right-circle"></i> Read More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    No topics created by {{ profile_user.userprofile.username }}.
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Answers Section -->
+        <div class="col-md-4">
+            <h3 class="section-title">
+                <i class="bi bi-chat-dots me-2"></i>Answers
+            </h3>
+            <div class="section-column">
+                {% for answer in answers %}
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{% url 'topic-detail' answer.topic_parent.id %}" class="text-decoration-none">
+                                <i class="bi bi-question-circle me-2"></i>
+                                {{ answer.topic_parent.topic_title }}
+                            </a>
+                        </h5>
+                        <p class="card-text truncate-text">
+                            <i class="bi bi-chat-left-quote me-2"></i>
+                            {{ answer.answer_body }}
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                <i class="bi bi-clock me-1"></i>
+                                {{ answer.topic_parent.topic_pub_date|timesince }} ago
+                            </small>
+                            <span>
+                                <i class="bi bi-hand-thumbs-up"></i> 
+                                {{ answer.topic_parent.upvotes }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    No answers by {{ profile_user.userprofile.username }}.
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Tutorials Section -->
+        <div class="col-md-4">
+            <h3 class="section-title">
+                <i class="bi bi-book me-2"></i>Tutorials
+            </h3>
+            <div class="section-column">
+                {% for t in tutorials %}
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{% url 'tutorial-detail' t.pk %}" class="text-decoration-none">
+                                <i class="bi bi-journal-text me-2"></i>
+                                {{ t.title }}
+                            </a>
+                        </h5>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            <i class="bi bi-calendar-event me-2"></i>
+                            {{ t.date | date:"Y-m-d" }}
+                        </h6>
+                        <p class="card-text truncate-text">{{ t.short_description }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="badge bg-primary">
+                                <i class="bi bi-tag me-1"></i>
+                                {{ t.category }}
+                            </span>
+                            <a href="{% url 'tutorial-detail' t.pk %}" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-book-half"></i> Read Tutorial
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    No tutorials created by {{ profile_user.userprofile.username }}.
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock extra_js %}
