@@ -2,18 +2,16 @@
 
 import os
 from pathlib import Path
-from decouple import Config, RepositoryEnv
+
 
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 import dj_database_url
 # Load environment variables
-env_path = os.path.join(BASE_DIR, '.env')
-config = Config(repository=RepositoryEnv(env_path))
 
 # Secret key and debug (ensure SECRET_KEY is kept secret in production)
-SECRET_KEY = config('SECRET_KEY', default='your-default-secret-key')  # Replace or manage securely
-DEBUG = config('DEBUG', default=True, cast=bool)
+SECRET_KEY = os.environ.get('SECRET_KEY', default='your-default-secret-key')  # Replace or manage securely
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]  # Update as needed for production
 
@@ -111,11 +109,11 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # AWS Settings
-AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID') 
-AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
-AWS_S3_REGION_NAME = config('AWS_S3_REGION_NAME')
-AWS_S3_CUSTOM_DOMAIN = config('AWS_S3_CUSTOM_DOMAIN')
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID') 
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME')
+AWS_S3_CUSTOM_DOMAIN = os.environ.get('AWS_S3_CUSTOM_DOMAIN')
 AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
 AWS_DEFAULT_ACL = None  # Recommended to set to None to use bucket ACLs
 AWS_S3_SIGNATURE_VERSION = 's3v4'
