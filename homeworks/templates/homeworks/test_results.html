@@ -1,54 +1,157 @@
 {% extends "general/basel.html" %}
 {% load static %}
-{% block content %}
+
+{% block extra_css %}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 <style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Roboto', sans-serif;
+    }
+    .container {
+        max-width: 800px;
+    }
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+        overflow: hidden;
+        transition: transform 0.3s ease-in-out;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    .card-body {
+        padding: 2rem;
+    }
+    .card-title {
+        color: #3498db;
+        font-weight: 700;
+    }
+    .score-card {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+    }
+    .score-card .card-title {
+        color: white;
+        font-size: 2.5rem;
+    }
     .correct {
-        background-color: #d4edda;
-        border-color: #c3e6cb;
+        background-color: #e8f8f5;
+        border-left: 5px solid #2ecc71;
     }
     .incorrect {
-        background-color: #f8d7da;
-        border-color: #f5c6cb;
+        background-color: #fdf2e9;
+        border-left: 5px solid #e74c3c;
+    }
+    .status-icon {
+        font-size: 1.5rem;
+        margin-right: 0.5rem;
+    }
+    .btn-outline-primary {
+        color: #3498db;
+        border-color: #3498db;
+    }
+    .btn-outline-primary:hover {
+        background-color: #3498db;
+        color: white;
+    }
+    .explanation {
+        background-color: #f1f8ff;
+        border-radius: 10px;
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+    .progress {
+        height: 10px;
+        margin-bottom: 1rem;
+    }
+    .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out;
     }
 </style>
+{% endblock extra_css %}
 
-<div class="container mt-4">
-    <h1 class="mb-4">Test Results: {{ test_attempt.test.title }}</h1>
-    <div class="card mb-4">
-        <div class="card-body">
-            <h2 class="card-title">Score: {{ test_attempt.score|floatformat:2 }}%</h2>
-            <p class="card-text">Date: {{ test_attempt.timestamp|date:"F d, Y H:i" }}</p>
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">Test Results: {{ test_attempt.test.title }}</h1>
+    
+    <div class="card score-card mb-4 animate-on-scroll">
+        <div class="card-body text-center">
+            <h2 class="card-title mb-3">Your Score</h2>
+            <div class="display-1 mb-3">{{ test_attempt.score|floatformat:0 }}%</div>
+            <p class="card-text">Completed on {{ test_attempt.timestamp|date:"F d, Y at H:i" }}</p>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: {{ test_attempt.score|floatformat:0 }}%;" aria-valuenow="{{ test_attempt.score|floatformat:0 }}" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
         </div>
     </div>
 
     {% for result in results %}
-    <div class="card mb-4 {% if result.is_correct %}correct{% else %}incorrect{% endif %}">
+    <div class="card mb-4 {% if result.is_correct %}correct{% else %}incorrect{% endif %} animate-on-scroll">
         <div class="card-body">
             <h5 class="card-title">Question {{ forloop.counter }}</h5>
             <p class="card-text">{{ result.question|safe }}</p>
             <p><strong>Your answer:</strong> {{ result.selected_answer }}</p>
             <p><strong>Correct answer:</strong> {{ result.correct_answer }}</p>
-            <p><strong>Status:</strong> 
+            <p>
+                <strong>Status:</strong> 
                 {% if result.is_correct %}
-                <span class="text-success">Correct</span>
+                <span class="text-success"><i class="fas fa-check-circle status-icon"></i>Correct</span>
                 {% else %}
-                <span class="text-danger">Incorrect</span>
+                <span class="text-danger"><i class="fas fa-times-circle status-icon"></i>Incorrect</span>
                 {% endif %}
             </p>
             {% if not result.is_correct and result.question.explanation %}
-            <div class="mt-3">
-                <h6>Explanation:</h6>
+            <div class="explanation">
+                <h6><i class="fas fa-lightbulb"></i> Explanation:</h6>
                 <p>{{ result.question.explanation }}</p>
             </div>
             {% endif %}
-            <a href="{% url 'question-detail' result.pk %}" class="btn btn-outline-success">In Detail</a>
+            <a href="{% url 'question-detail' result.pk %}" class="btn btn-outline-primary mt-3">
+                <i class="fas fa-info-circle"></i> View Details
+            </a>
         </div>
     </div>
     {% endfor %}
 
-    <a href="{% url 'test-list' %}" class="btn btn-primary mb-4">Back to Test List</a>
+    <div class="text-center mb-5">
+        <a href="{% url 'test-list' %}" class="btn btn-primary btn-lg">
+            <i class="fas fa-list"></i> Back to Test List
+        </a>
+    </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 {% endblock content %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function animateOnScroll() {
+        const elements = document.querySelectorAll('.animate-on-scroll');
+        elements.forEach(element => {
+            if (isElementInViewport(element)) {
+                element.style.opacity = '1';
+                element.style.transform = 'translateY(0)';
+            }
+        });
+    }
+
+    function isElementInViewport(el) {
+        const rect = el.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    }
+
+    document.addEventListener('DOMContentLoaded', animateOnScroll);
+    window.addEventListener('scroll', animateOnScroll);
+</script>
+{% endblock extra_js %}

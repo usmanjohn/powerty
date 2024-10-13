@@ -10,7 +10,7 @@ class UserProfileForm(forms.ModelForm):
         model = UserProfile
         fields = ['username','image', 'bio','telegram_username']
         labels = {
-            'telegram_username': 'Not required:Telegram Username (without @)',
+            'telegram_username': 'Not required: Telegram Username (without @)',
         }
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)

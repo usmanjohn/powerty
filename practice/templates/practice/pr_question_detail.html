@@ -2,73 +2,181 @@
 {% load static %}
 
 {% block extra_css %}
-    <style>
-        .correct {
-            font-weight: bold;
-            color: #28a745;
-        }
-        .question-image {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 1rem;
-        }
-        .options li {
-            margin-bottom: 0.5rem;
-        }
-    </style>
-    {% endblock extra_css %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+<style>
+    body {
+        background-color: #f0f4f8;
+        font-family: 'Roboto', sans-serif;
+        color: #2c3e50;
+    }
+    .container {
+        max-width: 800px;
+    }
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+        transition: transform 0.3s ease-in-out;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    .card-body {
+        padding: 2rem;
+    }
+    .card-title {
+        color: #3498db;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+    .question-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .options li {
+        margin-bottom: 0.75rem;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        background-color: #fff;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    .options li:hover {
+        background-color: #e8f6ff;
+    }
+    .correct {
+        font-weight: bold;
+        color: #2ecc71;
+        background-color: #e8f8f5 !important;
+    }
+    .btn {
+        border-radius: 25px;
+        padding: 0.5rem 1.5rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+    .btn-primary {
+        background-color: #3498db;
+        border-color: #3498db;
+    }
+    .btn-primary:hover {
+        background-color: #2980b9;
+        border-color: #2980b9;
+    }
+    .btn-secondary {
+        background-color: #95a5a6;
+        border-color: #95a5a6;
+    }
+    .btn-secondary:hover {
+        background-color: #7f8c8d;
+        border-color: #7f8c8d;
+    }
+    .explanation-card {
+        background-color: #fdf2e9;
+    }
+    .explanation-icon {
+        font-size: 2rem;
+        color: #e67e22;
+        margin-bottom: 1rem;
+    }
+    .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    }
+</style>
+{% endblock extra_css %}
+
 {% block content %}
-    <div class="container py-5">
-        <h1 class="mb-4">Question Detail</h1>
+<div class="container py-5">
+    <h1 class="mb-4 text-center">Practice Question</h1>
 
-        <div class="card mb-4">
-            <div class="card-body">
-                <h2 class="card-title">{{ question.question_text|safe }}</h2>
-                
-                {% if question.image %}
-                <img src="{{ question.image.url }}" alt="Question Image" class="question-image img-fluid rounded">
-                {% endif %}
+    <div class="card mb-4 animate-on-scroll">
+        <div class="card-body">
+            <h2 class="card-title">{{ question.question_text|safe }}</h2>
+            
+            {% if question.image %}
+            <img src="{{ question.image.url }}" alt="Question Image" class="question-image img-fluid">
+            {% endif %}
 
-                <div class="options mt-4">
-                    <h3>Choices:</h3>
-                    <ul class="list-group">
-                        <li class="list-group-item {% if question.correct_answer == 1 %}correct{% endif %}">1. {{ question.choice1 }}</li>
-                        <li class="list-group-item {% if question.correct_answer == 2 %}correct{% endif %}">2. {{ question.choice2 }}</li>
-                        <li class="list-group-item {% if question.correct_answer == 3 %}correct{% endif %}">3. {{ question.choice3 }}</li>
-                        <li class="list-group-item {% if question.correct_answer == 4 %}correct{% endif %}">4. {{ question.choice4 }}</li>
-                        <li class="list-group-item {% if question.correct_answer == 5 %}correct{% endif %}">5. {{ question.choice5 }}</li>
-                    </ul>
-                </div>
+            <div class="options mt-4">
+                <h3 class="mb-3">Choices:</h3>
+                <ul class="list-unstyled">
+                    <li class="{% if question.correct_answer == 1 %}correct{% endif %}"><i class="fas fa-circle-check me-2"></i>1. {{ question.choice1 }}</li>
+                    <li class="{% if question.correct_answer == 2 %}correct{% endif %}"><i class="fas fa-circle-check me-2"></i>2. {{ question.choice2 }}</li>
+                    <li class="{% if question.correct_answer == 3 %}correct{% endif %}"><i class="fas fa-circle-check me-2"></i>3. {{ question.choice3 }}</li>
+                    <li class="{% if question.correct_answer == 4 %}correct{% endif %}"><i class="fas fa-circle-check me-2"></i>4. {{ question.choice4 }}</li>
+                    <li class="{% if question.correct_answer == 5 %}correct{% endif %}"><i class="fas fa-circle-check me-2"></i>5. {{ question.choice5 }}</li>
+                </ul>
             </div>
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-body">
-                <h3 class="card-title">Correct Answer:</h3>
-                <p class="card-text">Choice {{ question.correct_answer }}</p>
-            </div>
-        </div>
-
-        {% if question.explanation %}
-        <div class="card mb-4">
-            <div class="card-body">
-                <h3 class="card-title">Explanation:</h3>
-                <p class="card-text">{{ question.explanation }}</p>
-            </div>
-        </div>
-        {% endif %}
-
-        {% if question.link %}
-        <div class="mb-4">
-            <a href="{{ question.link }}" target="_blank" class="btn btn-primary">Learn More</a>
-        </div>
-        {% endif %}
-
-        <div class="navigation">
-            <a href="javascript:history.back()" class="btn btn-secondary">Back</a>
         </div>
     </div>
-    {% endblock %}
-    {% block extra_js %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
-    {% endblock extra_js %}
+
+    <div class="card mb-4 animate-on-scroll">
+        <div class="card-body text-center">
+            <h3 class="card-title">Correct Answer</h3>
+            <p class="card-text" style="font-size: 1.25rem; color: #2ecc71;">Choice {{ question.correct_answer }}</p>
+        </div>
+    </div>
+
+    {% if question.explanation %}
+    <div class="card mb-4 explanation-card animate-on-scroll">
+        <div class="card-body">
+            <div class="text-center explanation-icon">
+                <i class="fas fa-lightbulb"></i>
+            </div>
+            <h3 class="card-title text-center">Explanation</h3>
+            <p class="card-text">{{ question.explanation }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if question.link %}
+    <div class="text-center mb-4 animate-on-scroll">
+        <a href="{{ question.link }}" target="_blank" class="btn btn-primary">
+            <i class="fas fa-external-link-alt me-2"></i>Learn More
+        </a>
+    </div>
+    {% endif %}
+
+    <div class="navigation text-center animate-on-scroll">
+        <a href="javascript:history.back()" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+<script>
+    function animateOnScroll() {
+        const elements = document.querySelectorAll('.animate-on-scroll');
+        elements.forEach(element => {
+            if (isElementInViewport(element)) {
+                element.style.opacity = '1';
+                element.style.transform = 'translateY(0)';
+            }
+        });
+    }
+
+    function isElementInViewport(el) {
+        const rect = el.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    }
+
+    document.addEventListener('DOMContentLoaded', animateOnScroll);
+    window.addEventListener('scroll', animateOnScroll);
+</script>
+{% endblock extra_js %}
