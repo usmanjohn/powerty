@@ -76,7 +76,7 @@ WSGI_APPLICATION = "gmat.wsgi.application"
 # Database
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL')
+        default='sqlite:///db.sqlite3'
     )
 }
 

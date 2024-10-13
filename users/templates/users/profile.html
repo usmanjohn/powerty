@@ -75,11 +75,19 @@
             <p class="icon-text"><i class="bi bi-envelope"></i> {{ profile_user.email }}</p>
             <p class="icon-text"><i class="bi bi-calendar-check"></i> Member since: {{ profile_user.userprofile.date }}</p>
             <p class="icon-text"><i class="bi bi-person-lines-fill"></i> {{ profile_user.userprofile.bio }}</p>
-            {% if is_own_profile %}
-            <a href="{% url 'update-profile' user.email %}" class="btn btn-primary mt-3">
-                <i class="bi bi-pencil-square"></i> Update Profile
-            </a>
-            {% endif %}
+            <div class="d-flex flex-column align-items-start gap-2">
+                {% if user.userprofile.telegram_username %}
+                <a href="{{ user.userprofile.telegram_url }}" target="_blank" class="btn btn-outline-primary">
+                    <i class="bi bi-telegram"></i> Telegram
+                </a>
+                {% endif %}
+                
+                {% if is_own_profile %}
+                <a href="{% url 'update-profile' user.email %}" class="btn btn-primary">
+                    <i class="bi bi-pencil-square"></i> Update Profile
+                </a>
+                {% endif %}
+            </div>
         </div>
     </div>
 

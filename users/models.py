@@ -16,7 +16,13 @@ class UserProfile(models.Model):
     bio = models.CharField(max_length=2000, default='I did not write a bio yet')
     date = models.DateField(auto_now_add=True)
     username = models.CharField(max_length=15, unique=True)
-    
+    telegram_username = models.CharField(max_length=100, blank=True, null=True)
+
+    @property
+    def telegram_url(self):
+        if self.telegram_username:
+            return f'https://t.me/{self.telegram_username}'
+        return None
 
     def __str__(self) -> str:
         return f'{self.user.username} Profile' 

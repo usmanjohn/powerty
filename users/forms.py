@@ -8,7 +8,10 @@ User = get_user_model()
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['username','image', 'bio']
+        fields = ['username','image', 'bio','telegram_username']
+        labels = {
+            'telegram_username': 'Not required:Telegram Username (without @)',
+        }
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
     class Meta:
@@ -32,4 +35,7 @@ class CustomUserCreationForm(UserCreationForm):
 class UserProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['image', 'bio']
+        fields = ['image', 'bio','telegram_username']
+        labels = {
+            'telegram_username': 'Not required: Telegram Username (without @)',
+        }
