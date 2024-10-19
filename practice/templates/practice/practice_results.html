@@ -90,6 +90,10 @@
         transform: translateY(20px);
         transition: opacity 0.5s ease-out, transform 0.5s ease-out;
     }
+  .progress-bar {
+    width: var(--progress-width);
+  }
+
 </style>
 {% endblock extra_css %}
 
@@ -103,8 +107,14 @@
             <div class="display-1 mb-3">{{ test_attempt.score|floatformat:0 }}%</div>
             <p class="card-text">Completed on {{ test_attempt.timestamp|date:"F d, Y at H:i" }}</p>
             <div class="progress">
-                <div class="progress-bar" role="progressbar" style="width: {{ test_attempt.score|floatformat:0 }}%;" aria-valuenow="{{ test_attempt.score|floatformat:0 }}" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
+                <div 
+                class="progress-bar" 
+                role="progressbar" 
+                style="--progress-width: {{ test_attempt.score|floatformat:0 }}%;" 
+                aria-valuenow="{{ test_attempt.score|floatformat:0 }}" 
+                aria-valuemin="0" 
+                aria-valuemax="100"
+              ></div>            </div>
         </div>
     </div>
 
@@ -112,9 +122,9 @@
     <div class="card mb-4 {% if result.is_correct %}correct{% else %}incorrect{% endif %} animate-on-scroll">
         <div class="card-body">
             <h5 class="card-title">Question {{ forloop.counter }}</h5>
-            <p class="card-text">{{ result.question|safe }}</p>
-            <p><strong>Your answer:</strong> {{ result.selected_answer }}</p>
-            <p><strong>Correct answer:</strong> {{ result.correct_answer }}</p>
+            <p class="card-text"> {{ result.question|safe }} </p>
+            <p><strong>Your answer:</strong> {{ result.selected_answer }} </p>
+            <p><strong>Correct answer:</strong> {{ result.correct_answer }} </p>
             <p>
                 <strong>Status:</strong> 
                 {% if result.is_correct %}

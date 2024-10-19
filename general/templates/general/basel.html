@@ -27,7 +27,21 @@
     <link rel="icon" type="image/png" href="{% static 'images/gmatpower.png' %}" />
 
     <title>Power_ty</title>
-    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" 
+        integrity="sha256-K+ctZQ+fXKT8OGLQQR4WRvNnP5aIbrVJwAqkRYBzw5I=" 
+        crossorigin="anonymous"></script> 
+        <script> 
+          window.MathJax = { 
+            tex: { 
+              inlineMath: [['\\(', '\\)']], 
+              displayMath: [['$$', '$$']] 
+            }, 
+            svg: { 
+              fontCache: 'global' 
+            } 
+          }; 
+        </script> 
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
       body {
