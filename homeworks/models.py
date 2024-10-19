@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django_ckeditor_5.fields import CKEditor5Field
 from storages.backends.s3boto3 import S3Boto3Storage
+from datetime import date
 class S3Storage(S3Boto3Storage):
     location = 'media'
 class Test(models.Model):
@@ -18,12 +19,13 @@ class Test(models.Model):
         ('mixed','Mixed'),
         ('real', 'Real')
     )
-    
+
     category = models.CharField(choices=Category_CHOICES, default='quant', max_length=20)
     level = models.CharField(choices=Easy_level, default='real', max_length=20)
 
     title = models.CharField(max_length=200)
     description = models.TextField()
+    date = models.DateField( default=date.today)
 
     def __str__(self):
         return self.title

@@ -73,6 +73,13 @@
         transform: translateY(20px);
         transition: opacity 0.5s ease-out, transform 0.5s ease-out;
     }
+    .text-truncate-custom {
+    display: -webkit-box;
+    -webkit-line-clamp: 5;  /* Number of lines you want to show */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    max-height: 120px;  /* Approximate height for 5 lines */
+}
 </style>
 {% endblock extra_css %}
 
@@ -95,9 +102,9 @@
     <div class="card mb-4 {% if result.is_correct %}correct{% else %}incorrect{% endif %} animate-on-scroll">
         <div class="card-body">
             <h5 class="card-title">Question {{ forloop.counter }}</h5>
-            <p class="card-text">{{ result.question|safe }}</p>
-            <p><strong>Your answer:</strong> {{ result.selected_answer }}</p>
-            <p><strong>Correct answer:</strong> {{ result.correct_answer }}</p>
+            <p class="card-text text-truncate-custom">{{ result.question|safe }}</p>
+            <p><strong>Your answer:</strong> {{ result.selected_answer|safe }}</p>
+            <p><strong>Correct answer:</strong> {{ result.correct_answer|safe }}</p>
             <p>
                 <strong>Status:</strong> 
                 {% if result.is_correct %}
@@ -106,12 +113,7 @@
                 <span class="text-danger"><i class="fas fa-times-circle status-icon"></i>Incorrect</span>
                 {% endif %}
             </p>
-            {% if not result.is_correct and result.question.explanation %}
-            <div class="explanation">
-                <h6><i class="fas fa-lightbulb"></i> Explanation:</h6>
-                <p>{{ result.question.explanation }}</p>
-            </div>
-            {% endif %}
+            
             <a href="{% url 'question-detail' result.pk %}" class="btn btn-outline-primary mt-3">
                 <i class="fas fa-info-circle"></i> View Details
             </a>

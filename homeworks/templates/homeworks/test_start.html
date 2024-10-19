@@ -21,11 +21,11 @@
                     <div class="form-check mb-2">
                         <input class="form-check-input" type="radio" name="question_{{ question.id }}" id="choice{{ i }}_{{ question.id }}" value="{{ i }}" required>
                         <label class="form-check-label" for="choice{{ i }}_{{ question.id }}">
-                            {% if i == '1' %}{{ question.choice1 }}
-                            {% elif i == '2' %}{{ question.choice2 }}
-                            {% elif i == '3' %}{{ question.choice3 }}
-                            {% elif i == '4' %}{{ question.choice4 }}
-                            {% elif i == '5' %}{{ question.choice5 }}
+                            {% if i == '1' %}{{ question.choice1|safe }}
+                            {% elif i == '2' %}{{ question.choice2|safe }}
+                            {% elif i == '3' %}{{ question.choice3|safe }}
+                            {% elif i == '4' %}{{ question.choice4|safe}}
+                            {% elif i == '5' %}{{ question.choice5|safe }}
                             {% endif %}
                         </label>
                     </div>
