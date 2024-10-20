@@ -90,10 +90,9 @@
 <div class="container py-5">
     <h1 class="mb-4 text-center" style="color: #34495e; font-weight: 700;">Question Detail</h1>
 
-    <div class="card mb-4 question-card">
+    <div class="card mb-4">
         <div class="card-body">
-            <h2 class="card-title">{{ question.question_text|safe }}</h2>
-            
+            <p class="card-text">{{ question.question_text|safe }}</p>
             {% if question.image %}
             <img src="{{ question.image.url }}" alt="Question Image" class="question-image img-fluid">
             {% endif %}
@@ -101,11 +100,11 @@
             <div class="options mt-4">
                 <h3 class="mb-3" style="color: #34495e;">Choices:</h3>
                 <ul class="list-unstyled">
-                    <li class="{% if question.correct_answer == 1 %}correct{% endif %}">1. {{ question.choice1|safe }}</li>
-                    <li class="{% if question.correct_answer == 2 %}correct{% endif %}">2. {{ question.choice2|safe }}</li>
-                    <li class="{% if question.correct_answer == 3 %}correct{% endif %}">3. {{ question.choice3|safe }}</li>
-                    <li class="{% if question.correct_answer == 4 %}correct{% endif %}">4. {{ question.choice4|safe }}</li>
-                    <li class="{% if question.correct_answer == 5 %}correct{% endif %}">5. {{ question.choice5|safe }}</li>
+                    <li class="{% if question.correct_answer == 1 %}correct{% endif %}">{{ question.choice1|safe }}</li>
+                    <li class="{% if question.correct_answer == 2 %}correct{% endif %}">{{ question.choice2|safe }}</li>
+                    <li class="{% if question.correct_answer == 3 %}correct{% endif %}">{{ question.choice3|safe }}</li>
+                    <li class="{% if question.correct_answer == 4 %}correct{% endif %}">{{ question.choice4|safe }}</li>
+                    <li class="{% if question.correct_answer == 5 %}correct{% endif %}">{{ question.choice5|safe }}</li>
                 </ul>
             </div>
         </div>

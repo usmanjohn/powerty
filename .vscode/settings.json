@@ -1,6 +1,7 @@
 {
     "cSpell.words": [
         "boto",
+        "csrftoken",
         "forloop",
         "mathfield",
         "mathlive",
@@ -8,6 +9,8 @@
         "Pracitce",
         "pracitcequestions",
         "unsave",
+        "upvoted",
+        "upvotes",
         "userprofile"
     ]
 }

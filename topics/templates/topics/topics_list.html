@@ -44,7 +44,7 @@
       <div class="card h-100">
         <div class="row g-0">
           <div class="col-md-3 text-center my-auto">
-            <a href="{% url 'profile' topic.topic_author.username %}">
+            <a href="{% url 'profile' topic.topic_author.email %}">
               <img
                 src="{{ topic.topic_author.userprofile.image.url }}"
                 alt="{{ topic.topic_author.username }}'s profile picture"
@@ -52,7 +52,7 @@
                 style="width: 50px; height: 50px"
               />
             </a>
-            <a href="{% url 'profile' topic.topic_author.username %}">
+            <a href="{% url 'profile' topic.topic_author.email %}">
               {{ topic.topic_author.userprofile.username }}
             </a>
           </div>

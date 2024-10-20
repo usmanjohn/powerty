@@ -15,13 +15,13 @@
 <div class="container mt-4">
     <div class="row g-0">
         <div class="col-md-2 text-center my-auto">
-            <a href="{% url 'profile' topic.topic_author.username %}">
+            <a href="{% url 'profile' topic.topic_author.email %}">
                 <img src="{{topic.topic_author.userprofile.image.url}}" 
                     alt="{{ topic.topic_author.userprofile.username }}'s profile picture" 
                     class="img-fluid rounded-circle mx-auto d-block" 
                     style="width: 70px; height: 70px;">
             </a>
-            <a href="{% url 'profile' topic.topic_author.username %}">{{ topic.topic_author.userprofile.username }}</a>
+            <a href="{% url 'profile' topic.topic_author.email %}">{{ topic.topic_author.userprofile.username }}</a>
         </div>
         <div class="col-md-7 my-auto">
             <h3>{{ topic.topic_title }} 
