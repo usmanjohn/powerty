@@ -1,7 +1,6 @@
 {% extends "general/basel.html" %}
 {% load static %}
-{% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> {% endblock extra_js %}
+
 {% block content %}
     <style>
         .test-card {
@@ -168,7 +167,7 @@
                         </div>
         
                         <div class="attempts-container">
-                            {% if user.userprofile.is_member %}
+                            {% if test.is_accessible %}
                                 <a href="{% url 'test-start' test.pk %}" 
                                    class="btn btn-primary w-100 mb-3 rounded-pill">
                                     <i class="fas fa-play-circle me-2"></i>Start Test
@@ -201,6 +200,7 @@
                                 </div>
                                 {% endif %}
                             {% else %}
+                                {% if not test.is_free %}
                                 <div class="alert alert-warning rounded-3 border-0 shadow-sm" role="alert">
                                     <i class="fas fa-exclamation-triangle me-2"></i>
                                     <strong>Premium Access Required</strong>
@@ -210,6 +210,7 @@
                                         <i class="bi bi-telegram me-2"></i>Contact @AlBetta
                                     </a>
                                 </div>
+                                {% endif %}
                             {% endif %}
                         </div>
                     </div>
@@ -231,5 +232,7 @@
     </div>
     {% endif %}
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+   
 {% endblock %}
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> {% endblock extra_js %}

@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Max
 from .models import MultipleChoiceQuestion, Test, UserAnswer, TestAttempt
-from .decorators import member_required
+from .decorators import member_required, test_access_required
+
 
 
 @login_required
@@ -10,28 +11,38 @@ def select_test(request):
     latest_attempts = {}
     count_try = 0
     tests = Test.objects.all()
-    if request.user.userprofile.is_member:
-        attempts = TestAttempt.objects.filter(user=request.user).order_by('-timestamp')
-        count_try = attempts.count 
-        for attempt in attempts:
-            if attempt.test_id not in latest_attempts or attempt.timestamp > latest_attempts[attempt.test_id].timestamp:
-                latest_attempts[attempt.test_id] = attempt
+    
+    # Get attempts for both members and non-members
+    attempts = TestAttempt.objects.filter(user=request.user).order_by('-timestamp')
+    count_try = attempts.count()
+    
+    for attempt in attempts:
+        if attempt.test_id not in latest_attempts or attempt.timestamp > latest_attempts[attempt.test_id].timestamp:
+            latest_attempts[attempt.test_id] = attempt
 
-    return render(request, 'homeworks/test_list.html', {'tests': tests, 'count_try':count_try,'attempts': latest_attempts.values()})
+    # Add is_accessible flag to tests
+    for test in tests:
+        test.is_accessible = request.user.userprofile.is_member or test.is_free
 
-@member_required
+    return render(request, 'homeworks/test_list.html', {
+        'tests': tests, 
+        'count_try': count_try,
+        'attempts': latest_attempts.values()
+    })
+
+@test_access_required
 def start_test(request, pk):
     test = get_object_or_404(Test, pk=pk)
     questions = test.questions.all()
     return render(request, 'homeworks/test_start.html', {'questions': questions, 'test': test})
 
 
-@member_required
+@test_access_required
 def question_detail(request, pk):
     question = get_object_or_404(MultipleChoiceQuestion, pk=pk)
     return render(request, 'homeworks/question_detail.html', {'question': question})
      
-@member_required
+@test_access_required
 def submit_test(request, pk):
     test = get_object_or_404(Test, id=pk)
     questions = test.questions.all()
@@ -63,7 +74,7 @@ def submit_test(request, pk):
     
     return render(request, 'homeworks/test_start.html', {'test': test, 'questions': questions})
 
-@member_required
+@test_access_required
 def test_results(request, pk):
     test_attempt = get_object_or_404(TestAttempt, id=pk, user=request.user)
     user_answers = UserAnswer.objects.filter(test_attempt=test_attempt)

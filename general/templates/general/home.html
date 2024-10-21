@@ -6,59 +6,192 @@
 
 {% block content %}
 <style>
-    .card-body {
-        max-height: none;
+    .container {
+        padding: 2rem 1rem;
     }
-    .card {
-        transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-    }
-    /* Light Gradient Backgrounds */
-    .bg-primary-light {
-        background: linear-gradient(to bottom right, #a8c0ff, #3f2b96);
-        color: white;
-    }
-    .bg-success-light {
-        background: linear-gradient(to bottom right, #c3e9ca, #a8dadc);
-        color: #155724;
-    }
-    .bg-warning-light {
-        background: linear-gradient(to bottom right, #ffe29f, #ffa751);
-        color: #856404;
-    }
-    .bg-info-light {
-        background: linear-gradient(to bottom right, #cfd9df, #e2ebf0);
-        color: #0c5460;
-    }
-    .list-group-item {
-        border: none;
-        border-bottom: 1px solid #e9ecef;
-    }
-    .list-group-item:last-child {
-        border-bottom: none;
-    }
-    .btn-custom {
-        width: 100%;
+    
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2d3436;
+        margin-bottom: 2.5rem;
         text-align: center;
+        position: relative;
     }
-    /* Responsive Adjustments */
+    
+    .page-title:after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: linear-gradient(to right, #a8c0ff, #3f2b96);
+        border-radius: 2px;
+    }
+    
+    .card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+        backdrop-filter: blur(10px);
+    }
+    
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+    
+    .card-header {
+        border: none;
+        padding: 1.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .card-header h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0;
+        position: relative;
+        z-index: 1;
+    }
+    
+    /* Refined gradient backgrounds */
+    .bg-primary-light {
+        background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+        color: #2d3436;
+    }
+    
+    .bg-success-light {
+        background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
+        color: #2d3436;
+    }
+    
+    .bg-warning-light {
+        background: linear-gradient(135deg, #ffd1ff 0%, #fad0c4 100%);
+        color: #2d3436;
+    }
+    
+    .bg-info-light {
+        background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+        color: #2d3436;
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+    }
+    
+    .list-group {
+        margin: -0.5rem;
+    }
+    
+    .list-group-item {
+        padding: 1rem;
+        margin: 0.5rem;
+        border-radius: 10px;
+        border: 1px solid rgba(0,0,0,0.05);
+        transition: all 0.2s ease;
+    }
+    
+    .list-group-item:hover {
+        background: rgba(0,0,0,0.02);
+        transform: translateX(5px);
+    }
+    
+    .list-group-item h5 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2d3436;
+        margin-bottom: 0.5rem;
+    }
+    
+    .list-group-item p {
+        color: #636e72;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 0.5rem;
+    }
+    
+    .list-group-item small {
+        color: #b2bec3;
+        font-size: 0.85rem;
+    }
+    
+    .card-footer {
+        background: transparent;
+        border-top: 1px solid rgba(0,0,0,0.05);
+        padding: 1.25rem;
+    }
+    
+    .btn-custom {
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        border-radius: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        border: none;
+    }
+    
+    .btn-custom:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #6e8efb, #4777e6);
+    }
+    
+    .btn-success {
+        background: linear-gradient(135deg, #42b883, #42b883);
+    }
+    
+    .btn-warning {
+        background: linear-gradient(135deg, #ffb347, #ffcc33);
+    }
+    
+    .btn-info {
+        background: linear-gradient(135deg, #56ccf2, #2f80ed);
+    }
+    
+    /* Responsive adjustments */
     @media (max-width: 767.98px) {
-        .card-footer {
-            padding-top: 0;
+        .container {
+            padding: 1rem;
+        }
+        
+        .page-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card-header {
+            padding: 1.25rem;
+        }
+        
+        .card-body {
+            padding: 1.25rem;
+        }
+        
+        .list-group-item {
+            padding: 0.75rem;
         }
     }
 </style>
 
-<div class="container mt-4">
-    <h1 class="text-center mb-5">Welcome to GMAT Prep</h1>
+<div class="container">
+    <h1 class="page-title">Welcome to GMAT Prep</h1>
 
     <div class="row g-4">
         <!-- Topics Section -->
         <div class="col-lg-6">
-            <div class="card h-100" onclick="window.location='{% url 'topics-list' %}';" style="cursor: pointer;">
+            <div class="card" onclick="window.location='{% url 'topics-list' %}';" style="cursor: pointer;">
                 <div class="card-header bg-primary-light">
                     <h2 class="h5 mb-0">Latest Topics</h2>
                 </div>
@@ -76,15 +209,15 @@
                         {% endfor %}
                     </div>
                 </div>
-                <div class="card-footer bg-transparent">
-                    <button class="btn btn-primary btn-custom">View All Topics</button>
+                <div class="card-footer">
+                    <button class="btn btn-primary btn-custom w-100">View All Topics</button>
                 </div>
             </div>
         </div>
 
-        <!-- Homeworks (Tests) Section -->
+        <!-- Homeworks Section -->
         <div class="col-lg-6">
-            <div class="card h-100" onclick="window.location='{% url 'test-list' %}';" style="cursor: pointer;">
+            <div class="card" onclick="window.location='{% url 'test-list' %}';" style="cursor: pointer;">
                 <div class="card-header bg-success-light">
                     <h2 class="h5 mb-0">Latest Homeworks</h2>
                 </div>
@@ -101,15 +234,15 @@
                         {% endfor %}
                     </div>
                 </div>
-                <div class="card-footer bg-transparent">
-                    <button class="btn btn-success btn-custom">View All Homeworks</button>
+                <div class="card-footer">
+                    <button class="btn btn-success btn-custom w-100">View All Homeworks</button>
                 </div>
             </div>
         </div>
 
         <!-- Practice Section -->
         <div class="col-lg-6">
-            <div class="card h-100" onclick="window.location='{% url 'practice-list' %}';" style="cursor: pointer;">
+            <div class="card" onclick="window.location='{% url 'practice-list' %}';" style="cursor: pointer;">
                 <div class="card-header bg-warning-light">
                     <h2 class="h5 mb-0">Practice Sets</h2>
                 </div>
@@ -126,15 +259,15 @@
                         {% endfor %}
                     </div>
                 </div>
-                <div class="card-footer bg-transparent">
-                    <button class="btn btn-warning btn-custom">View All Practice Sets</button>
+                <div class="card-footer">
+                    <button class="btn btn-warning btn-custom w-100">View All Practice Sets</button>
                 </div>
             </div>
         </div>
 
         <!-- Tutorials Section -->
         <div class="col-lg-6">
-            <div class="card h-100" onclick="window.location='{% url 'tutorial-list' %}';" style="cursor: pointer;">
+            <div class="card" onclick="window.location='{% url 'tutorial-list' %}';" style="cursor: pointer;">
                 <div class="card-header bg-info-light">
                     <h2 class="h5 mb-0">Latest Tutorials</h2>
                 </div>
@@ -152,8 +285,8 @@
                         {% endfor %}
                     </div>
                 </div>
-                <div class="card-footer bg-transparent">
-                    <button class="btn btn-info btn-custom">View All Tutorials</button>
+                <div class="card-footer">
+                    <button class="btn btn-info btn-custom w-100">View All Tutorials</button>
                 </div>
             </div>
         </div>
