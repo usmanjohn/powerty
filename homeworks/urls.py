@@ -8,6 +8,6 @@ urlpatterns = [
     path('test/<int:pk>/start/', views.start_test, name='test-start'),
     path('test/<int:pk>/submit/', views.submit_test, name='submit-test'),
     path('test-results/<int:pk>/', views.test_results, name='test-results'),
-    path('question-details/<pk>', views.question_detail, name = 'question-detail'),
+    path('question-details/<int:pk>/', views.question_detail, name = 'question-detail'),
     
 ]

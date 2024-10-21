@@ -51,3 +51,5 @@ def test_access_required(view_func):
         raise PermissionDenied
 
     return _wrapped_view
+from .models import MultipleChoiceQuestion
+

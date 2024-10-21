@@ -37,10 +37,7 @@ def start_test(request, pk):
     return render(request, 'homeworks/test_start.html', {'questions': questions, 'test': test})
 
 
-@test_access_required
-def question_detail(request, pk):
-    question = get_object_or_404(MultipleChoiceQuestion, pk=pk)
-    return render(request, 'homeworks/question_detail.html', {'question': question})
+
      
 @test_access_required
 def submit_test(request, pk):
@@ -86,7 +83,7 @@ def test_results(request, pk):
         selected_answer = getattr(question, f'choice{user_answer.selected_choice}')
         results.append({
             'question': question.question_text,
-            'pk':question.pk,
+            'questionpk':question.pk,
             'selected_answer': selected_answer,
             'correct_answer': correct_answer,
             'is_correct': user_answer.is_correct(),
@@ -97,3 +94,8 @@ def test_results(request, pk):
         'test_attempt': test_attempt,
         'results': results
     })
+
+@login_required
+def question_detail(request, pk):
+    question = get_object_or_404(MultipleChoiceQuestion, pk=pk)
+    return render(request, 'homeworks/question_detail.html', {'question': question})
