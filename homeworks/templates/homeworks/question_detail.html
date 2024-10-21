@@ -17,10 +17,7 @@
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         margin-bottom: 2rem;
         overflow: hidden;
-        transition: transform 0.3s ease-in-out;
-    }
-    .card:hover {
-        transform: translateY(-5px);
+        /* Removed hover transform to simplify */
     }
     .card-body {
         padding: 2rem;
@@ -83,6 +80,18 @@
         color: #e67e22;
         margin-bottom: 1rem;
     }
+
+    /* Animation Styles */
+    .animate-element {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    }
+
+    .animate-element.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
 </style>
 {% endblock extra_css %}
 
@@ -90,13 +99,13 @@
 <div class="container py-5">
     <h1 class="mb-4 text-center" style="color: #34495e; font-weight: 700;">Question Detail</h1>
 
-    <div class="card mb-4">
+    <div class="card mb-4 animate-element">
         <div class="card-body">
             <p class="card-text">{{ question.question_text|safe }}</p>
             {% if question.image %}
-            <img src="{{ question.image.url }}" alt="Question Image" class="question-image img-fluid">
+            <img src="{{ question.image.url }}" alt="Question Image" class="question-image img-fluid rounded">
             {% endif %}
-
+            
             <div class="options mt-4">
                 <h3 class="mb-3" style="color: #34495e;">Choices:</h3>
                 <ul class="list-unstyled">
@@ -110,7 +119,7 @@
         </div>
     </div>
 
-    <div class="card mb-4">
+    <div class="card mb-4 animate-element">
         <div class="card-body text-center">
             <h3 class="card-title">Correct Answer</h3>
             <p class="card-text" style="font-size: 1.25rem; color: #2ecc71;">Choice {{ question.correct_answer|safe }}</p>
@@ -118,7 +127,7 @@
     </div>
 
     {% if question.explanation %}
-    <div class="card mb-4 explanation-card">
+    <div class="card mb-4 explanation-card animate-element">
         <div class="card-body">
             <div class="text-center explanation-icon">💡</div>
             <h3 class="card-title text-center">Explanation</h3>
@@ -128,53 +137,39 @@
     {% endif %}
 
     {% if question.link %}
-    <div class="text-center mb-4">
+    <div class="text-center mb-4 animate-element">
         <a href="{{ question.link }}" target="_blank" class="btn btn-primary">Learn More</a>
     </div>
     {% endif %}
 
-    <div class="navigation text-center">
+    <div class="navigation text-center animate-element">
         <a href="javascript:history.back()" class="btn btn-secondary">Back</a>
     </div>
 </div>
-{% endblock %}
+{% endblock content %}
 
 {% block extra_js %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Add subtle animations to elements as they come into view
-    function animateOnScroll() {
-        const elements = document.querySelectorAll('.card, .btn');
-        elements.forEach(element => {
-            if (isElementInViewport(element)) {
-                element.style.opacity = '1';
-                element.style.transform = 'translateY(0)';
-            }
-        });
-    }
-
-    function isElementInViewport(el) {
-        const rect = el.getBoundingClientRect();
-        return (
-            rect.top >= 0 &&
-            rect.left >= 0 &&
-            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-        );
-    }
-
-    // Initial setup
     document.addEventListener('DOMContentLoaded', () => {
-        const elements = document.querySelectorAll('.card, .btn');
-        elements.forEach(element => {
-            element.style.opacity = '0';
-            element.style.transform = 'translateY(20px)';
-            element.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
-        });
-        animateOnScroll();
-    });
+        const elements = document.querySelectorAll('.animate-element');
 
-    // Animate elements as user scrolls
-    window.addEventListener('scroll', animateOnScroll);
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        elements.forEach(element => {
+            observer.observe(element);
+        });
+    });
 </script>
 {% endblock extra_js %}
