@@ -5,10 +5,6 @@ from .models import MultipleChoiceQuestion, Test, UserAnswer, TestAttempt
 from .decorators import member_required
 
 
-@member_required
-def question_detail(request, pk):
-    question = get_object_or_404(MultipleChoiceQuestion, pk=pk)
-    return render(request, 'homeworks/question_detail.html', {'question': question})
 @login_required
 def select_test(request):
     latest_attempts = {}
@@ -29,6 +25,12 @@ def start_test(request, pk):
     questions = test.questions.all()
     return render(request, 'homeworks/test_start.html', {'questions': questions, 'test': test})
 
+
+@member_required
+def question_detail(request, pk):
+    question = get_object_or_404(MultipleChoiceQuestion, pk=pk)
+    return render(request, 'homeworks/question_detail.html', {'question': question})
+     
 @member_required
 def submit_test(request, pk):
     test = get_object_or_404(Test, id=pk)
