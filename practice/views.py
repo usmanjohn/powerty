@@ -8,21 +8,31 @@ from .decorators import practice_access_required
 def pr_question_detail(request, pk):
     question = get_object_or_404(PracitceQuestions, pk=pk)
     return render(request, 'practice/pr_question_detail.html', {'question': question})
-@login_required
 def select_practice(request):
-    latest_attempts = {}
-    count_try = 0
     tests = Practice.objects.all()
+    attempts = []
+    count_try = 0
     
-    attempts = PracticeAttempt.objects.filter(user=request.user).order_by('-timestamp')
-    count_try = attempts.count() 
-    for attempt in attempts:
-        if attempt.test_id not in latest_attempts or attempt.timestamp > latest_attempts[attempt.test_id].timestamp:
-            latest_attempts[attempt.test_id] = attempt
-    for test in tests:
-        test.is_accessible = request.user.userprofile.is_member or test.is_free
-    return render(request, 'practice/practice_list.html', {'tests': tests, 'count_try':count_try,'attempts': latest_attempts.values()})
+    if request.user.is_authenticated:
+        attempts = PracticeAttempt.objects.filter(user=request.user).order_by('-timestamp')
+        count_try = attempts.count()
+        
+        latest_attempts = {}
+        for attempt in attempts:
+            if attempt.test_id not in latest_attempts or \
+               attempt.timestamp > latest_attempts[attempt.test_id].timestamp:
+                latest_attempts[attempt.test_id] = attempt
+        attempts = latest_attempts.values()
 
+    for test in tests:
+        test.is_accessible = request.user.is_authenticated and \
+            (request.user.userprofile.is_member or test.is_free)
+
+    return render(request, 'practice/practice_list.html', {
+        'tests': tests,
+        'count_try': count_try,
+        'attempts': attempts
+    })
 @practice_access_required
 def start_practice(request, pk):
     test = get_object_or_404(Practice, pk=pk)

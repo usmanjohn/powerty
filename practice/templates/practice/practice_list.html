@@ -1,5 +1,6 @@
 {% extends "general/basel.html" %}
 {% load static %}
+
 {% block content %}
     <style>
         body {
@@ -13,8 +14,6 @@
             background: white;
             position: relative;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
         }
         .practice-card:hover {
             transform: translateY(-5px);
@@ -55,12 +54,11 @@
             padding: 1.5rem;
             display: flex;
             flex-direction: column;
-            flex-grow: 1;
+            height: 100%;
         }
         .card-title {
             font-size: 1.25rem;
             margin-bottom: 0.75rem;
-            flex-shrink: 0;
         }
         .category-pill {
             padding: 0.4rem 1rem;
@@ -69,18 +67,27 @@
             font-weight: 600;
             background: #e9ecef;
             color: #495057;
-            margin-bottom: 1rem;
-            display: inline-block;
+            margin-right: 0.5rem;
         }
+        .level-pill {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .level-easy { background: #28a745; color: white; }
+        .level-medium { background: #007bff; color: white; }
+        .level-hard { background: #dc3545; color: white; }
+        .level-mixed { background: #6f42c1; color: white; }
+        .level-real { background: #fd7e14; color: white; }
+        
         .card-text {
             color: #6c757d;
-            margin-bottom: 1.5rem;
-            /* Limit to 3 lines */
+            margin: 1rem 0;
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;  
             overflow: hidden;
-            text-overflow: ellipsis;
             flex-grow: 1;
         }
         .stats-badge {
@@ -95,41 +102,6 @@
         .stats-badge i {
             margin-right: 0.5rem;
         }
-        .attempts-list {
-            max-height: 100px; /* Reduced height for better alignment */
-            overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: #28a745 #f8f9fa;
-        }
-        .attempts-list::-webkit-scrollbar {
-            width: 6px;
-        }
-        .attempts-list::-webkit-scrollbar-track {
-            background: #f8f9fa;
-        }
-        .attempts-list::-webkit-scrollbar-thumb {
-            background-color: #28a745;
-            border-radius: 6px;
-        }
-        .list-group-item {
-            padding: 0.5rem 1rem;
-        }
-        .list-group-item i {
-            margin-right: 0.5rem;
-        }
-        .premium-alert {
-            background: linear-gradient(45deg, #fff3e0, #ffe0b2);
-            border: none;
-            border-radius: 10px;
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-        .premium-alert i {
-            margin-bottom: 0.5rem;
-        }
         .action-button {
             border-radius: 25px;
             padding: 0.5rem 1.5rem;
@@ -141,11 +113,7 @@
             align-items: center;
             justify-content: center;
         }
-        /* Ensure the action section sticks to the bottom */
-        .card-footer {
-            margin-top: auto;
-        }
-        /* Responsive adjustments */
+
         @media (max-width: 576px) {
             .card-body {
                 padding: 1rem;
@@ -156,6 +124,10 @@
             .action-button {
                 padding: 0.4rem 1rem;
                 font-size: 0.8rem;
+            }
+            .category-pill, .level-pill {
+                font-size: 0.7rem;
+                padding: 0.3rem 0.8rem;
             }
         }
     </style>
@@ -171,7 +143,7 @@
         <div class="row g-4">
             {% for test in tests %}
                 <div class="col-lg-4 col-md-6">
-                    <div class="practice-card card shadow">
+                    <div class="practice-card card">
                         {% if test.is_free %}
                             <span class="card-badge badge-free">
                                 <i class="fas fa-unlock-alt me-1"></i>Free Access
@@ -182,68 +154,38 @@
                             </span>
                         {% endif %}
 
-                        <div class="card-body d-flex flex-column">
+                        <div class="card-body">
                             <h4 class="card-title">{{ test.title }}</h4>
                             
-                            <span class="category-pill">
-                                <i class="fas fa-tag me-2"></i>{{ test.category }}
-                            </span>
+                            <div class="d-flex flex-wrap">
+                                <span class="category-pill">
+                                    <i class="fas fa-tag me-2"></i>{{ test.category }}
+                                </span>
+                                <span class="level-pill level-{{ test.level|lower }}">
+                                    <i class="fas fa-layer-group me-2"></i>{{ test.level }}
+                                </span>
+                            </div>
                             
                             <p class="card-text">{{ test.description }}</p>
                             
-                            <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="d-flex justify-content-between align-items-center mt-auto">
                                 <span class="stats-badge">
                                     <i class="fas fa-question-circle"></i>
                                     {{ test.practice_questions.count }} Questions
                                 </span>
                                 
-                                {% if test.is_accessible %}
-                                    <a href="{% url 'practice-start' test.pk %}" 
-                                       class="btn btn-success action-button">
-                                        <i class="fas fa-play-circle me-2"></i>Start Practice
-                                    </a>
-                                {% endif %}
-                            </div>
-
-                            <div class="card-footer mt-auto">
-                                {% if test.is_accessible %}
-                                    {% if attempts %}
-                                        <div class="card bg-light border-0">
-                                            <div class="card-header bg-light border-0 p-2">
-                                                <h6 class="mb-0">
-                                                    <i class="fas fa-history me-2"></i>Your Progress
-                                                </h6>
-                                            </div>
-                                            <div class="attempts-list">
-                                                {% for attempt in attempts %}
-                                                    {% if attempt.test.pk == test.pk %}
-                                                        <div class="list-group-item border-0 d-flex justify-content-between align-items-center">
-                                                            <div>
-                                                                <i class="fas fa-chart-line text-success me-2"></i>
-                                                                <span class="fw-bold">{{ attempt.score|floatformat:2 }}%</span>
-                                                            </div>
-                                                            <a href="{% url 'practice-results' attempt.id %}" 
-                                                               class="btn btn-outline-success btn-sm rounded-pill">
-                                                                <i class="fas fa-eye me-1"></i>Review
-                                                            </a>
-                                                        </div>
-                                                    {% endif %}
-                                                {% endfor %}
-                                            </div>
-                                        </div>
+                                {% if user.is_authenticated %}
+                                    {% if test.is_accessible %}
+                                        <a href="{% url 'practice-start' test.pk %}" 
+                                           class="btn btn-success action-button">
+                                            <i class="fas fa-play-circle me-2"></i>Start
+                                        </a>
                                     {% endif %}
                                 {% else %}
-                                    <div class="premium-alert alert p-3">
-                                        <div class="d-flex align-items-center mb-2">
-                                            <i class="fas fa-lock text-warning me-2 fs-4"></i>
-                                            <h6 class="mb-0">Premium Practice Test</h6>
-                                        </div>
-                                        
-                                        <a href="https://t.me/AlBetta" 
-                                           class="btn btn-warning action-button w-100">
-                                            <i class="fab fa-telegram me-2"></i>Contact for Access
-                                        </a>
-                                    </div>
+                                    <a href="{% url 'login' %}" 
+                                       class="btn btn-primary action-button">
+                                        <i class="fas fa-sign-in-alt me-2"></i>Login
+                                    </a>
                                 {% endif %}
                             </div>
                         </div>
@@ -257,17 +199,18 @@
                 </div>
             {% endfor %}
         </div>
-    </div>
 
-    {% if not user.is_authenticated %}
-        <div class="container text-center mt-4 mb-5">
-            <a href="{% url 'login' %}" 
-               class="btn btn-success btn-lg action-button shadow">
-                <i class="fas fa-sign-in-alt me-2"></i>Login to Access Practice Tests
-            </a>
-        </div>
-    {% endif %}
+        {% if not user.is_authenticated %}
+            <div class="text-center mt-5">
+                <a href="{% url 'login' %}" 
+                   class="btn btn-success btn-lg action-button shadow">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login to Access Practice Tests
+                </a>
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}
+
 {% block extra_js %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 {% endblock extra_js %}
