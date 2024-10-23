@@ -5,31 +5,33 @@ from .models import MultipleChoiceQuestion, Test, UserAnswer, TestAttempt
 from .decorators import member_required, test_access_required
 
 
-
-@login_required
 def select_test(request):
-    latest_attempts = {}
-    count_try = 0
     tests = Test.objects.all()
+    attempts = []
+    count_try = 0
     
-    # Get attempts for both members and non-members
-    attempts = TestAttempt.objects.filter(user=request.user).order_by('-timestamp')
-    count_try = attempts.count()
-    
-    for attempt in attempts:
-        if attempt.test_id not in latest_attempts or attempt.timestamp > latest_attempts[attempt.test_id].timestamp:
-            latest_attempts[attempt.test_id] = attempt
+    if request.user.is_authenticated:
+        attempts = TestAttempt.objects.filter(user=request.user).order_by('-timestamp')
+        count_try = attempts.count()
+        
+        latest_attempts = {}
+        for attempt in attempts:
+            if attempt.test_id not in latest_attempts or \
+               attempt.timestamp > latest_attempts[attempt.test_id].timestamp:
+                latest_attempts[attempt.test_id] = attempt
+        attempts = latest_attempts.values()
 
     # Add is_accessible flag to tests
     for test in tests:
-        test.is_accessible = request.user.userprofile.is_member or test.is_free
+        test.is_accessible = request.user.is_authenticated and \
+            (request.user.userprofile.is_member or test.is_free)
 
     return render(request, 'homeworks/test_list.html', {
-        'tests': tests, 
-        'count_try': count_try,
-        'attempts': latest_attempts.values()
+        'tests': tests,
+        'count_try': count_try, 
+        'attempts': attempts
     })
-
+    
 @test_access_required
 def start_test(request, pk):
     test = get_object_or_404(Test, pk=pk)

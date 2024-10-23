@@ -1,7 +1,7 @@
 {% extends "general/basel.html" %}
 {% load static %}
 
-{% block content %}
+{% block content %} 
     <style>
         .test-card {
             border: none;
@@ -165,8 +165,9 @@
                                 </span>
                             </div>
                         </div>
-        
+                        
                         <div class="attempts-container">
+                            {% if user.is_authenticated %}
                             {% if test.is_accessible %}
                                 <a href="{% url 'test-start' test.pk %}" 
                                    class="btn btn-primary w-100 mb-3 rounded-pill">
@@ -211,6 +212,12 @@
                                     </a>
                                 </div>
                                 {% endif %}
+                            {% endif %}
+                            {% else %}
+                                <a href="{% url 'login' %}" 
+                                class="btn btn-primary w-100 mb-3 rounded-pill">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Login to Start
+                                </a>
                             {% endif %}
                         </div>
                     </div>
