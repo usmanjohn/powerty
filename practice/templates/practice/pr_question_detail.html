@@ -108,11 +108,11 @@
             <div class="options mt-4">
                 <h3 class="mb-3">Choices:</h3>
                 <ul class="list-unstyled">
-                    <li class="{% if question.correct_answer == 1 %}correct{% endif %}"><i class="fas fa-circle-check me-2"></i>1. {{ question.choice1 }}</li>
-                    <li class="{% if question.correct_answer == 2 %}correct{% endif %}"><i class="fas fa-circle-check me-2"></i>2. {{ question.choice2 }}</li>
-                    <li class="{% if question.correct_answer == 3 %}correct{% endif %}"><i class="fas fa-circle-check me-2"></i>3. {{ question.choice3 }}</li>
-                    <li class="{% if question.correct_answer == 4 %}correct{% endif %}"><i class="fas fa-circle-check me-2"></i>4. {{ question.choice4 }}</li>
-                    <li class="{% if question.correct_answer == 5 %}correct{% endif %}"><i class="fas fa-circle-check me-2"></i>5. {{ question.choice5 }}</li>
+                    <li class="{% if question.correct_answer == 1 %}correct{% endif %}"><i class="fas fa-circle-check me-2"></i>1. {{ question.choice1|safe }}</li>
+                    <li class="{% if question.correct_answer == 2 %}correct{% endif %}"><i class="fas fa-circle-check me-2"></i>2. {{ question.choice2|safe }}</li>
+                    <li class="{% if question.correct_answer == 3 %}correct{% endif %}"><i class="fas fa-circle-check me-2"></i>3. {{ question.choice3|safe }}</li>
+                    <li class="{% if question.correct_answer == 4 %}correct{% endif %}"><i class="fas fa-circle-check me-2"></i>4. {{ question.choice4|safe }}</li>
+                    <li class="{% if question.correct_answer == 5 %}correct{% endif %}"><i class="fas fa-circle-check me-2"></i>5. {{ question.choice5|safe }}</li>
                 </ul>
             </div>
         </div>
@@ -121,7 +121,7 @@
     <div class="card mb-4 animate-on-scroll">
         <div class="card-body text-center">
             <h3 class="card-title">Correct Answer</h3>
-            <p class="card-text" style="font-size: 1.25rem; color: #2ecc71;">Choice {{ question.correct_answer }}</p>
+            <p class="card-text" style="font-size: 1.25rem; color: #2ecc71;">Choice {{ question.correct_answer|safe }}</p>
         </div>
     </div>
 
@@ -132,7 +132,7 @@
                 <i class="fas fa-lightbulb"></i>
             </div>
             <h3 class="card-title text-center">Explanation</h3>
-            <p class="card-text">{{ question.explanation }}</p>
+            <p class="card-text">{{ question.explanation|safe }}</p>
         </div>
     </div>
     {% endif %}

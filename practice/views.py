@@ -4,7 +4,7 @@ from django.db.models import Max
 from .models import PracitceQuestions, Practice, UserPrAnswer, PracticeAttempt
 from .decorators import practice_access_required
 
-@practice_access_required
+@login_required
 def pr_question_detail(request, pk):
     question = get_object_or_404(PracitceQuestions, pk=pk)
     return render(request, 'practice/pr_question_detail.html', {'question': question})
