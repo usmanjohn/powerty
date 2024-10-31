@@ -8,9 +8,11 @@
         background-color: #f0f4f8;
         font-family: 'Roboto', sans-serif;
         color: #2c3e50;
+        overflow-y: auto; /* Ensure scrolling works properly */
     }
     .container {
         max-width: 800px;
+        opacity: 1 !important; /* Ensure container is always visible */
     }
     .card {
         border: none;
@@ -18,6 +20,8 @@
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         margin-bottom: 2rem;
         transition: transform 0.3s ease-in-out;
+        opacity: 1; /* Ensure cards are visible by default */
+        transform: none; /* Reset any transform */
     }
     .card:hover {
         transform: translateY(-5px);
@@ -88,16 +92,26 @@
     .animate-on-scroll {
         opacity: 0;
         transform: translateY(20px);
-        transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    }
+    .animate-on-scroll.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Add this to ensure content is visible on page load */
+    .initial-load {
+        opacity: 1 !important;
+        transform: none !important;
     }
 </style>
 {% endblock extra_css %}
 
 {% block content %}
 <div class="container py-5">
-    <h1 class="mb-4 text-center">Practice Question</h1>
+    <h1 class="mb-4 text-center initial-load">Practice Question</h1>
 
-    <div class="card mb-4 animate-on-scroll">
+    <div class="card mb-4 animate-on-scroll initial-load">
         <div class="card-body">
             <h2 class="card-title">{{ question.question_text|safe }}</h2>
             
@@ -156,27 +170,36 @@
 {% block extra_js %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 <script>
+    // Improved scroll animation function
     function animateOnScroll() {
-        const elements = document.querySelectorAll('.animate-on-scroll');
+        const elements = document.querySelectorAll('.animate-on-scroll:not(.initial-load)');
+        
         elements.forEach(element => {
-            if (isElementInViewport(element)) {
-                element.style.opacity = '1';
-                element.style.transform = 'translateY(0)';
+            const rect = element.getBoundingClientRect();
+            const isVisible = (
+                rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.8 &&
+                rect.bottom >= 0 &&
+                rect.left >= 0 &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
+            
+            if (isVisible) {
+                element.classList.add('visible');
             }
         });
     }
 
-    function isElementInViewport(el) {
-        const rect = el.getBoundingClientRect();
-        return (
-            rect.top >= 0 &&
-            rect.left >= 0 &&
-            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-        );
-    }
+    // Initialize animations
+    document.addEventListener('DOMContentLoaded', function() {
+        // Show initial content immediately
+        document.querySelectorAll('.initial-load').forEach(element => {
+            element.style.opacity = '1';
+            element.style.transform = 'none';
+        });
 
-    document.addEventListener('DOMContentLoaded', animateOnScroll);
-    window.addEventListener('scroll', animateOnScroll);
+        // Set up scroll animations
+        animateOnScroll();
+        window.addEventListener('scroll', animateOnScroll);
+    });
 </script>
 {% endblock extra_js %}
