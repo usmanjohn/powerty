@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django_ckeditor_5.fields import CKEditor5Field
 from storages.backends.s3boto3 import S3Boto3Storage
+from django.utils.html import strip_tags
 
 class S3Storage(S3Boto3Storage):
     location = 'media'
@@ -55,7 +56,7 @@ class PracitceQuestions(models.Model):
     link = models.URLField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.id} - {self.question_text[:50]}"
+        return f"{self.id} - {strip_tags(self.question_text)[:50]}"
 
 class PracticeAttempt(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='practice_attempts')
