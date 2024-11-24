@@ -30,7 +30,7 @@ def select_test(request):
     ).order_by(
         'type_order',  # First order by type (math -> geometry -> mixed -> other)
         'order',       # Then by the order field
-        '-date'        # Finally by date (newest first)
+        'date'        # Finally by date (newest first)
     )
     
     attempts = []
