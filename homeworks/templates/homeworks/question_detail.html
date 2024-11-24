@@ -131,14 +131,14 @@
         <div class="card-body">
             <div class="text-center explanation-icon">💡</div>
             <h3 class="card-title text-center">Explanation</h3>
-            <p class="card-text">{{ question.explanation|safe }}</p>
+            <p class="card-text">{{ question.explanation|safe }}</p> 
         </div>
     </div>
     {% endif %}
 
-    {% if question.link %}
+    {% if question.test.link %}
     <div class="text-center mb-4 animate-element">
-        <a href="{{ question.link }}" target="_blank" class="btn btn-primary">Learn More</a>
+        <a href="{{ question.test.link }}" target="_blank" class="btn btn-primary">Learn More</a>
     </div>
     {% endif %}
 

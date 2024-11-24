@@ -106,7 +106,7 @@
           <div class="card-body">
             {% if test_results %} {% for test in test_results %}
             <div class="result-item">
-              <a href="#">{{ test.title }}</a>
+              <a href="{% url 'test-results' test.pk %}">{{ test.title }}</a>
             </div>
             {% endfor %} {% else %}
             <p class="text-muted">No Homeworks Found.</p>

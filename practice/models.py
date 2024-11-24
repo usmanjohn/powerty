@@ -7,6 +7,13 @@ from django.utils.html import strip_tags
 class S3Storage(S3Boto3Storage):
     location = 'media'
 class Practice(models.Model):
+
+    Type = (
+    ('gmat','GMAT'),
+    ('sat', 'SAT'),
+    ('gre','GRE'),
+    ('other','Other')
+    )
     Category_CHOICES = (
     ('quant','Quant'),
     ('verbal', 'Verbal'),
@@ -22,7 +29,7 @@ class Practice(models.Model):
     )
     category = models.CharField(choices=Category_CHOICES, default='quant', max_length=20)
     level = models.CharField(choices=Easy_level, default='real', max_length=20)
-
+    type = models.CharField(choices=Type, default='gmat', max_length=20)
     title = models.CharField(max_length=200)
     description = models.TextField()
     date = models.DateField(auto_now_add = True)

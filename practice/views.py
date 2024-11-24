@@ -8,8 +8,17 @@ from .decorators import practice_access_required
 def pr_question_detail(request, pk):
     question = get_object_or_404(PracitceQuestions, pk=pk)
     return render(request, 'practice/pr_question_detail.html', {'question': question})
+from itertools import groupby
+from operator import itemgetter
+
 def select_practice(request):
-    tests = Practice.objects.all()
+    tests = Practice.objects.all().order_by('type', 'title')  # Order by type and title for consistent grouping
+    grouped_tests = {}
+
+    # Group tests by type
+    for key, group in groupby(tests, key=lambda x: x.type):
+        grouped_tests[key] = list(group)
+
     attempts = []
     count_try = 0
     
@@ -29,10 +38,11 @@ def select_practice(request):
             (request.user.userprofile.is_member or test.is_free)
 
     return render(request, 'practice/practice_list.html', {
-        'tests': tests,
+        'grouped_tests': grouped_tests,
         'count_try': count_try,
         'attempts': attempts
     })
+
 @practice_access_required
 def start_practice(request, pk):
     test = get_object_or_404(Practice, pk=pk)

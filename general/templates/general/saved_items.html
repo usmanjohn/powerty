@@ -126,7 +126,7 @@
         <div class="search-results card">
           <div class="card-body">
             {% if saved_practice %}
-    {% for practice_attempt in practice_tests %}
+    {% for practice_attempt in saved_practice %}
     <div class="card mb-2">
         <div class="card-body p-2">
             <h5 class="card-title">{{ practice_attempt.test.title }}</h5>

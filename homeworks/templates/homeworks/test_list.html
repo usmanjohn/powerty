@@ -132,16 +132,31 @@
         
     </style>
 
-    <div class="container-fluid py-4">
-        <div class="text-center mb-5">
-            <h1 class="display-4 fw-bold text-primary">
-                <i class="fas fa-book-open me-2"></i>Homeworks
-            </h1>
-            <p class="lead text-muted">Enhance your skills with our subject based test collection</p>
-        </div>
+<div class="container-fluid py-4">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-primary">
+            Homeworks <i class="bi bi-pencil-square"></i>
+        </h1>
+        <p class="lead text-muted">Enhance your skills with our subject based test collection</p>
+    </div>
+
+    {% for type, type_tests in grouped_tests.items %}
+        <div class="mb-5">
+            <h4 class="mb-4 text-primary">
+                {% if type == 'math' %}
+                <i class="bi bi-infinity"></i> {{ type|title }} <i class="bi bi-percent"></i>
+                {% elif type == 'geometry' %}
+                <i class="bi bi-square"></i>  {{ type|title }}  <i class="bi bi-triangle"></i>
+                {% elif type == 'mixed' %}
+                <i class="bi bi-bricks"></i> {{ type|title }}  <i class="bi bi-calculator-fill"></i>
+                {% else %}
+                <i class="bi bi-puzzle"></i> {{ type|title }}  <i class="bi bi-asterisk"></i>
+                {% endif %}
+                
+            </h4>
 
         <div class="test-grid">
-            {% for test in tests %}
+            {% for test in type_tests %}
                 <div class="card shadow test-card card-hover">
                     <div class="test-card-header">
                         <h4 class="card-title text-white">{{ test.title }}</h4>
@@ -228,6 +243,7 @@
                 </div>
             {% endfor %}
         </div>
+        {% endfor %}
     </div>
 
     {% if not user.is_authenticated %}

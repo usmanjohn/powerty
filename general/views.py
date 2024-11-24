@@ -47,7 +47,7 @@ def saved_all(request):
     practice = PracticeAttempt.objects.filter(user=request.user).values('test').annotate(
         latest_attempt=Max('id')
     ).values_list('latest_attempt', flat=True)
-    
+     
     practice = PracticeAttempt.objects.filter(id__in=tests).select_related('test')
     context = {
         'saved_topics': saved_topics,
