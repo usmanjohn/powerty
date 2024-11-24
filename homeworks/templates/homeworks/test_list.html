@@ -142,7 +142,14 @@
 
     {% for type, type_tests in grouped_tests.items %}
         <div class="mb-5">
-            <h4 class="mb-4 text-primary">
+            <div class="d-flex justify-content-center align-items-center gap-2 mb-4">
+                <hr class="border-2 border-primary flex-grow-1 opacity-75">
+                <i class="bi bi-diamond-fill text-info"></i>
+                <i class="bi bi-circle-fill text-primary small"></i>
+                <i class="bi bi-diamond-fill text-info"></i>
+                <hr class="border-2 border-primary flex-grow-1 opacity-75">
+            </div>
+            <h4 class="mb-4 text-primary text-center">
                 {% if type == 'math' %}
                 <i class="bi bi-infinity"></i> {{ type|title }} <i class="bi bi-percent"></i>
                 
@@ -162,6 +169,7 @@
                 <i class="bi bi-diamond-fill text-info"></i>
                 <hr class="border-2 border-primary flex-grow-1 opacity-75">
             </div>
+            
         <div class="test-grid">
             {% for test in type_tests %}
                 <div class="card shadow test-card card-hover">
