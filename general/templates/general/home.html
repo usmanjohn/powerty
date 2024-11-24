@@ -183,11 +183,33 @@
             padding: 0.75rem;
         }
     }
+    .quote-container {
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .quote-marks {
+            font-size: 4rem;
+            color: #dee2e6;
+            line-height: 1;
+            position: absolute;
+        }
+        
+        .start-quote {
+            top: 10px;
+            left: 10px;
+        }
+        
+        .end-quote {
+            bottom: -10px;
+            right: 10px;
+            transform: rotate(180deg);
+        }
 </style>
 
 <div class="container">
-    <h1 class="page-title">Powerty</h1>
-
+    <h4 class="text-center mb-4">Welcome to Powerty</h4>
     <div class="row g-4">
         <!-- Topics Section -->
         <div class="col-lg-6">
@@ -289,6 +311,18 @@
                     <button class="btn btn-info btn-custom w-100">View All Tutorials</button>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="container py-5">
+        
+        
+        <div class="quote-container position-relative p-5 my-4 mx-auto" style="max-width: 800px;">
+            <span class="quote-marks start-quote">"</span>
+            <blockquote class="text-center mb-0">
+                <p class="fs-4 fst-italic mb-1">Pure mathematics is, in its way, the poetry of logical ideas.</p>
+                <footer class="text-end text-muted">- Albert Einstein</footer>
+            </blockquote>
+            <span class="quote-marks end-quote">"</span>
         </div>
     </div>
 </div>
