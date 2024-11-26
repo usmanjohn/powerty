@@ -15,7 +15,7 @@ def practice_access_required(view_func):
         test = None
         if 'pk' in kwargs:
             # Handle both Test instances and TestAttempt instances
-            if 'test-results' in request.path:
+            if 'practice-results' in request.path:
                 test_attempt = get_object_or_404(PracticeAttempt, id=kwargs['pk'])
                 test = test_attempt.test
             else:

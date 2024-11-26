@@ -77,7 +77,7 @@ def submit_practice(request, pk):
         score = (correct_answers / total_questions) * 100 if total_questions > 0 else 0
         test_attempt.score = score
         test_attempt.save()
-
+        print("Redirecting to practice-results with test_attempt.id:", test_attempt.pk)
         return redirect('practice-results', pk=test_attempt.id)
     
     return render(request, 'practice/practice_start.html', {'test': test, 'questions': questions})
@@ -87,7 +87,6 @@ def practice_results(request, pk):
     test_attempt = get_object_or_404(PracticeAttempt, id=pk, user=request.user)
     user_answers = UserPrAnswer.objects.filter(test_attempt=test_attempt)
 
-
     results = []
     for user_answer in user_answers:
         question = user_answer.question
@@ -95,7 +94,7 @@ def practice_results(request, pk):
         selected_answer = getattr(question, f'choice{user_answer.selected_choice}')
         results.append({
             'question': question.question_text,
-            'pk':question.pk,
+            'questionpk':question.pk,
             'selected_answer': selected_answer,
             'correct_answer': correct_answer,
             'is_correct': user_answer.is_correct(),
