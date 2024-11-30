@@ -1,29 +1,5 @@
 {% extends "general/basel.html" %}
 {% load static %}
-{% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const commentSection = document.getElementById('commentSection');
-        const seeMoreBtn = document.getElementById('seeMoreBtn');
-        let currentComments = 5;
-    
-        seeMoreBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            currentComments += 5;
-            
-            fetch(`/load-more-comments/?count=${currentComments}`)
-                .then(response => response.text())
-                .then(html => {
-                    commentSection.innerHTML = html;
-                    if (currentComments >= {{ comments.count }}) {
-                        seeMoreBtn.style.display = 'none';
-                    }
-                });
-        });
-    });
-    </script>
-{% endblock extra_js %}
 
 {% block extra_css %}
 <style>
@@ -199,6 +175,92 @@
         padding: 20px;
         margin-bottom: 30px;
     }
+    body {
+        font-family: 'Poppins', sans-serif;
+        color: #333;
+        line-height: 1.6;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+
+    /* Mobile Responsive Comments Section */
+    @media (max-width: 768px) {
+        .comment-card {
+            flex-direction: column !important;
+            align-items: center;
+        }
+        .user-image {
+            margin-bottom: 10px;
+        }
+        .comment-bubble {
+            max-width: 100%;
+            margin: 0;
+            width: 100%;
+        }
+        .comment-card:nth-child(odd) .comment-bubble::before,
+        .comment-card:nth-child(even) .comment-bubble::before {
+            display: none;
+        }
+    }
+
+    /* Pricing Plans Section */
+    .pricing-section {
+        background-color: #f4f4f4;
+        padding: 50px 0;
+    }
+    .pricing-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+        transition: transform 0.3s ease;
+    }
+    .pricing-card:hover {
+        transform: translateY(-10px);
+    }
+    .pricing-card .card-header {
+        background-color: #007bff;
+        color: white;
+        text-align: center;
+        padding: 15px;
+        font-weight: bold;
+    }
+    .pricing-card .card-body {
+        padding: 20px;
+    }
+    .pricing-card .pricing-price {
+        font-size: 2rem;
+        color: #007bff;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .pricing-card .feature-list {
+        list-style-type: none;
+        padding: 0;
+    }
+    .pricing-card .feature-list li {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+    }
+    .pricing-card .feature-list li:last-child {
+        border-bottom: none;
+    }
+
+    /* Upcoming Features Section */
+    .upcoming-features {
+        background-color: #f8f9fa;
+        padding: 50px 0;
+    }
+    .feature-item {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+        transition: transform 0.3s ease;
+    }
+    .feature-item:hover {
+        transform: translateY(-5px);
+    }
 </style>
 {% endblock extra_css %}
 {% block content %}
@@ -301,6 +363,152 @@
             </div>
         </div>
     </section>
+    <!-- Pricing Plans Section -->
+    <section class="pricing-section" id="pricing">
+        <div class="container">
+            <h2 class="section-title text-center mb-5">Our Preparation Plans</h2>
+            <div class="row">
+                <!-- Soldier Plan -->
+                <div class="col-md-3 col-sm-6">
+                    <div class="pricing-card">
+                        <div class="card-header bg-secondary text-white text-center"><i class="bi bi-battery"></i> Soldier</div>
+                        <div class="card-body">
+                            <ul class="feature-list">
+                                <li><i class="bi bi-check-circle me-2 text-success"></i>Create/Answer/See Topics: <strong>Limited</strong></li>
+                                <li><i class="bi bi-file-earmark-text me-2"></i>Tutorials: <strong>Full Access</strong></li>
+                                <li><i class="bi bi-house me-2"></i>Homework: Free versions</li>
+                                <li><i class="bi bi-pencil-fill me-2"></i>Practice: Free versions</li>
+                                <li><i class="bi bi-check-circle me-2 text-muted"></i>Classes: <strong>Not Available</strong></li>
+                                <li><i class="bi bi-gift me-2 text-muted"></i>Bonus: <strong>-</strong></li>
+                                <li><i class="bi bi-lightbulb me-2 text-warning"></i>-</li>
+                            </ul>
+                            <div class="pricing-price text-center mt-4">
+                                <strong>Free</strong>
+                            </div>
+                            <a href="https://t.me/AlBetta" class="btn btn-primary w-100 mt-3">
+                                <i class="bi bi-telegram me-2"></i>Ask More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Prime Plan -->
+                <div class="col-md-3 col-sm-6">
+                    <div class="pricing-card">
+                        <div class="card-header bg-primary text-white text-center"><i class="bi bi-battery-half"></i> Prime</div>
+                        <div class="card-body">
+                            <ul class="feature-list">
+                                <li><i class="bi bi-check-circle me-2 text-success"></i>Create/Answer/See Topics: <strong>Expanded</strong></li>
+                                <li><i class="bi bi-file-earmark-text me-2"></i>Tutorials: <strong>More Access</strong></li>
+                                <li><i class="bi bi-house me-2"></i>Homework: Full access</li>
+                                <li><i class="bi bi-pencil-fill me-2" ></i>Practice: Full access</li>
+                                <li><i class="bi bi-check-circle me-2 text-muted"></i>Classes: <strong>Not Available</strong></li>
+                                <li><i class="bi bi-gift me-2 text-muted"></i>Bonus: <strong>No Bonus</strong></li>
+                                <li><i class="bi bi-lightbulb me-2 text-warning"></i>Guaranteed Access to Upcoming Features</li>
+                            </ul>
+                            <div class="pricing-price text-center mt-4">
+                                <strong>80,000 UZS/Month</strong>
+                            </div>
+                            <a href="https://t.me/AlBetta" class="btn btn-primary w-100 mt-3">
+                                <i class="bi bi-telegram me-2"></i>Ask More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Knight Plan -->
+                <div class="col-md-3 col-sm-6">
+                    <div class="pricing-card">
+                        <div class="card-header bg-warning text-white text-center"><i class="bi bi-battery-charging"></i> Knight</div>
+                        <div class="card-body">
+                            <ul class="feature-list">
+                                <li><i class="bi bi-check-circle me-2 text-success"></i>Create/Answer/See Topics: <strong>Full</strong></li>
+                                <li><i class="bi bi-file-earmark-text me-2"></i>Tutorials: <strong>Comprehensive</strong></li>
+                                <li><i class="bi bi-house me-2"></i>Homework: Full access</li>
+                                <li><i class="bi bi-pencil-fill me-2"></i>Practice: FUll access</li>
+                                <li><i class="bi bi-mortarboard-fill me-2 text-info"></i><strong>University Application Help:</strong> Document reviews and personalized guidance</li>
+                                <li><i class="bi bi-people-fill me-2 text-success"></i>Classes: <strong>Twice weekly (5-10 members)</strong></li>
+                                <li><i class="bi bi-gift-fill me-2 text-danger"></i>Bonus: <strong>One follow-up session monthly</strong></li>
+                                <li><i class="bi bi-chat-dots me-2"></i>Interactive Discussions</li>
+                            </ul>
+                            <div class="pricing-price text-center mt-4">
+                                <strong>500,000 UZS/Month</strong>
+                            </div>
+                            <a href="https://t.me/AlBetta" class="btn btn-primary w-100 mt-3">
+                                <i class="bi bi-telegram me-2"></i>Ask More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Prestige Plan -->
+                <div class="col-md-3 col-sm-6">
+                    <div class="pricing-card">
+                        <div class="card-header bg-danger text-white text-center"><i class="bi bi-battery-full"></i> Prestige</div>
+                        <div class="card-body">
+                            <ul class="feature-list">
+                                <li><i class="bi bi-check-circle me-2 text-success"></i>Create/Answer/See Topics: <strong>Unlimited</strong></li>
+                                <li><i class="bi bi-file-earmark-text me-2"></i>Tutorials: <strong>All Access</strong></li>
+                                <li><i class="bi bi-house me-2"></i>Homework: Lifetime access</li>
+                                <li><i class="bi bi-pencil-fill me-2"></i>Practice: Lifetime access</li>
+                                <li><i class="bi bi-mortarboard-fill me-2 text-info"></i><strong>University Application Support:</strong> Full assistance for documents and applications</li>
+                                <li><i class="bi bi-people-fill me-2 text-success"></i>Classes: <strong>Twice weekly (up to 4 members)</strong></li>
+                                <li><i class="bi bi-gift-fill me-2 text-danger"></i>Bonus: <strong>One follow-up session monthly</strong></li>
+                                <li><i class="bi bi-chat-dots me-2"></i>Interactive Discussions</li>
+                                <li><i class="bi bi-trophy me-2"></i>Lifetime Access to Upcoming Features</li>
+                            </ul>
+                            <div class="pricing-price text-center mt-4">
+                                <strong>1,000,000 UZS/Month</strong>
+                            </div>
+                            <a href="https://t.me/AlBetta" class="btn btn-primary w-100 mt-3">
+                                <i class="bi bi-telegram me-2"></i>Ask More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    
+<!-- Upcoming Features Section -->
+<section class="upcoming-features" id="upcoming-features">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">Upcoming Features and Free Resources</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="feature-item">
+                    <h4>Free Resources</h4>
+                    <ul>
+                        <li>Downloadable Study Materials</li>
+                        <li>Sample Practice Questions</li>
+                        <li>Test-Taking Strategies Guide</li>
+                        <li>Video Tutorials</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-item">
+                    <h4>Test Expansion</h4>
+                    <ul>
+                        <li>Verbal Tests</li>
+                        <li>Expanded Quantitative Tests</li>
+                        <li>Subject-Specific Practice Tests</li>
+                        <li>Comprehensive Subject Homeworks</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-item">
+                    <h4>Platform Enhancements</h4>
+                    <ul>
+                        <li>Personalized Student Dashboards</li>
+                        <li>Progress Tracking Tools</li>
+                        <li>Adaptive Learning Algorithms</li>
+                        <li>Detailed Performance Analytics</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
     <section class="mb-5">
         <h2 class="section-title">Leave Your Comment</h2>
         {% if user.is_authenticated %}
@@ -368,3 +576,34 @@
     </div>
 </footer>
 {% endblock %}
+
+
+
+{% block extra_js %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Existing comment loading script...
+    document.addEventListener('DOMContentLoaded', function() {
+        const commentSection = document.getElementById('commentSection');
+        const seeMoreBtn = document.getElementById('seeMoreBtn');
+        let currentComments = 5;
+    
+        if (seeMoreBtn) {
+            seeMoreBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                currentComments += 5;
+                
+                fetch(`/load-more-comments/?count=${currentComments}`)
+                    .then(response => response.text())
+                    .then(html => {
+                        commentSection.innerHTML = html;
+                        if (currentComments >= {{ comments.count }}) {
+                            seeMoreBtn.style.display = 'none';
+                        }
+                    });
+            });
+        }
+    });
+</script>
+{% endblock extra_js %}
