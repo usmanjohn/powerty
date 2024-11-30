@@ -537,7 +537,7 @@
     
 
     <section class="mb-5">
-        <h2 class="section-title">Comments</h2>
+        <h4 class="section-title">Comments</h4>
         <div class="comment-section" id="commentSection">
             {% for comment in comments|slice:":5" %}
                 <div class="comment-card">
@@ -547,7 +547,7 @@
                     </div>
                     <div class="comment-bubble">
                         <div class="comment-content">
-                            <h5>{{ comment.writer.username }} <small>({{ comment.rating }} <i class="bi bi-star-fill"></i>)</small></h5>
+                            <p>{{ comment.writer.username }} <small>({{ comment.rating }} <i class="bi bi-star-fill"></i>)</small></p>
                             <p class="comment-text">{{ comment.comment }}</p>
                             <div class="comment-meta">
                                 <i class="bi bi-clock"></i> {{ comment.date }}
