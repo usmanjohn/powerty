@@ -57,7 +57,7 @@ class MultipleChoiceQuestion(models.Model):
     link = models.URLField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.id} - {strip_tags(self.question_text)[:50]}"
+        return f"{self.id} -{self.test.type[:1]} - {self.test.title[:7]} - {strip_tags(self.question_text)[:50]}"
 
 class TestAttempt(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

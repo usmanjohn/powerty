@@ -63,7 +63,7 @@ class PracitceQuestions(models.Model):
     link = models.URLField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.id} - {strip_tags(self.question_text)[:50]}"
+        return f"{self.id}-{self.practice.type[:2]}-{self.practice.title[:5]}-{strip_tags(self.question_text)[:50]}"
 
 class PracticeAttempt(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='practice_attempts')
