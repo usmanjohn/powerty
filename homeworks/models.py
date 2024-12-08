@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django_ckeditor_5.fields import CKEditor5Field
 from storages.backends.s3boto3 import S3Boto3Storage
 from django.utils.html import strip_tags
+from django.urls import reverse
 
 class S3Storage(S3Boto3Storage):
     location = 'media'
@@ -37,8 +38,12 @@ class Test(models.Model):
     date = models.DateField( auto_now_add = True)
     is_free = models.BooleanField(default = False)
     link = models.URLField(blank=True, null=True, default="youtube.com/channel/UCv2shQIaFCsfUL29YL9uxIQ")
+    updated_at = models.DateTimeField(auto_now=True)
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('test-start', kwargs={'pk': self.pk})
 
 class MultipleChoiceQuestion(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='questions')
@@ -55,15 +60,20 @@ class MultipleChoiceQuestion(models.Model):
     made_by = models.ForeignKey(User, related_name='questions', on_delete=models.CASCADE)
     date_made = models.DateTimeField(auto_now_add=True)
     link = models.URLField(blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.id} -{self.test.type[:1]} - {self.test.title[:7]} - {strip_tags(self.question_text)[:50]}"
+    
+    def get_absolute_url(self):
+        return reverse('question-detail', kwargs={'pk': self.pk})
 
 class TestAttempt(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     test = models.ForeignKey(Test, on_delete=models.CASCADE, null= True, blank= True)
     timestamp = models.DateTimeField(auto_now_add=True)
     score = models.FloatField(default=0)
+    
 
     def __str__(self):
         return f"{self.user.username} - {self.test.title} ({self.timestamp.strftime('%Y-%m-%d %H:%M')})"

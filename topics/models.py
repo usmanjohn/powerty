@@ -4,6 +4,7 @@ from django.contrib import messages
 from django_ckeditor_5.fields import CKEditor5Field
 from django.db.models import Count, Q
 
+from django.urls import reverse
 
 # Create your models here.
 class Topic(models.Model):
@@ -19,12 +20,16 @@ class Topic(models.Model):
     topic_body = CKEditor5Field('Text', config_name='extends')    
     topic_category = models.CharField(choices=Category_CHOICES, default='Topik', max_length=15)
     topic_pub_date = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     def __str__(self) -> str:
         return self.topic_title 
     
     def upvotes(self):
         # This property will return the count of upvotes for this particular topic instance
         return Upvoter.objects.filter(topic=self, vote_type=1).count() 
+    
+    def get_absolute_url(self):
+        return reverse('topic-detail', kwargs={'pk': self.pk})
 
     def save(self, *args, **kwargs):
         # Call the original save method
@@ -54,11 +59,16 @@ class Answer(models.Model):
     topic_parent = models.ForeignKey(Topic, related_name='answer', on_delete=models.CASCADE)
     answer_body = models.TextField()
     answer_pub_date = models.DateField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
         return self.answer_body
+    
     def gains(self):
         return UpvoterAnswer.objects.filter(answer=self, vote_type=1).count()
+    
+    def get_absolute_url(self):
+        return reverse('topic-detail', kwargs={'pk': self.pk})  
 
 class Upvoter(models.Model):
     vote_choices = ((1,'upvote' ), (-1, 'downvote'))

@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 import datetime
 from django.utils import timezone
 from django_ckeditor_5.fields import CKEditor5Field 
+from django.urls import reverse
 
 
 class Tutorial(models.Model):
@@ -16,10 +17,13 @@ class Tutorial(models.Model):
     status = models.CharField(choices=status_choice, default='submitted', max_length=20)
     category = models.CharField(choices= category_choice, default='topik', max_length=20)
     date = models.DateField(auto_now_add=True)    
+    updated_at = models.DateTimeField(auto_now=True)
     
 
     def __str__(self) -> str:
         return self.title
+    def get_absolute_url(self):
+        return reverse('tutorial-detail', kwargs={'pk': self.pk})
 
 class SavedTutorial(models.Model): 
     user = models.ForeignKey(User, related_name='saved_tutorials', on_delete=models.CASCADE)
