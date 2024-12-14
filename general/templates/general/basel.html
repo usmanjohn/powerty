@@ -55,6 +55,23 @@
         display: flex;
         align-items: center;
       }
+      .btn-close-menu {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 2rem;
+    background: none;
+    border: none;
+    color: #333;
+    cursor: pointer;
+    z-index: 1050;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.btn-close-menu:hover {
+    opacity: 1;
+}
       .navbar-custom {
         background-color: #1e3d59; /* Dark blue background */
       }
@@ -226,15 +243,68 @@
         return new bootstrap.Tooltip(tooltipTriggerEl);
       });
     </script>
+
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        var tooltipTriggerList = [].slice.call(
-          document.querySelectorAll('[data-bs-toggle="tooltip"]')
-        );
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-          return new bootstrap.Tooltip(tooltipTriggerEl);
+      document.addEventListener('DOMContentLoaded', function() {
+    const navbarToggler = document.querySelector('.navbar-toggler');
+    const navbarCollapse = document.querySelector('.navbar-collapse');
+    
+    if (navbarToggler && navbarCollapse) {
+        // Create a close button
+        const closeButton = document.createElement('button');
+        closeButton.innerHTML = '&times;'; // X symbol
+        closeButton.classList.add('btn-close-menu');
+        closeButton.style.cssText = `
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 2rem;
+            background: none;
+            border: none;
+            color: #333;
+            cursor: pointer;
+            display: none;
+            z-index: 1050;
+        `;
+        
+        // Add close button to the navbar collapse
+        navbarCollapse.appendChild(closeButton);
+
+        // Toggle menu function
+        function toggleMenu() {
+            navbarCollapse.classList.toggle('show');
+            const isExpanded = navbarCollapse.classList.contains('show');
+            navbarToggler.setAttribute('aria-expanded', isExpanded);
+            
+            // Show/hide close button based on menu state
+            closeButton.style.display = isExpanded ? 'block' : 'none';
+        }
+
+        // Add click listeners
+        navbarToggler.addEventListener('click', toggleMenu);
+        closeButton.addEventListener('click', toggleMenu);
+
+        // Ensure close button works on mobile and other devices
+        closeButton.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            toggleMenu();
         });
-      });
+    }
+
+    // Interactive card effects (from original script)
+    const interactiveCards = document.querySelectorAll('.card[onclick]');
+    interactiveCards.forEach(card => {
+        card.addEventListener('mousedown', function() {
+            this.style.transform = 'scale(0.98)';
+        });
+        card.addEventListener('mouseup', function() {
+            this.style.transform = 'scale(1)';
+        });
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+        });
+    });
+});
     </script>
     {% block extra_js %}{% endblock extra_js %}
   </body>
