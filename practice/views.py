@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Max
 from .models import PracitceQuestions, Practice, UserPrAnswer, PracticeAttempt
 from .decorators import practice_access_required
+from django.urls import reverse
 
 @login_required
 def pr_question_detail(request, pk):
@@ -44,12 +45,26 @@ def select_practice(request):
     })
 
 @practice_access_required
-def start_practice(request, pk):
+def start_practice(request, pk): 
     test = get_object_or_404(Practice, pk=pk)
     questions = test.practice_questions.all()
     progress_percentage = 100
-    return render(request, 'practice/practice_start.html', {'questions': questions, 'test': test, 'progress_percentage':progress_percentage})
-
+    
+    # Add admin URLs for each question if user is staff
+    if request.user.is_staff:
+        for question in questions:
+            # Generate the admin URL for editing this question
+            question.admin_url = reverse(
+                'admin:practice_pracitcequestions_change',  # Note: Using your model name PracitceQuestions
+                args=[question.id]
+            )
+    
+    return render(request, 'practice/practice_start.html', {
+        'questions': questions, 
+        'test': test, 
+        'progress_percentage': progress_percentage,
+        'is_staff': request.user.is_staff
+    })
 @practice_access_required
 def submit_practice(request, pk):
     test = get_object_or_404(Practice, id=pk)
