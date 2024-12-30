@@ -1,17 +1,29 @@
 {% extends "general/basel.html" %}
 {% load static %}
 {% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> {% endblock extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock extra_js %}
+
 {% block content %}
 <div class="container mt-4">
     <h1 class="mb-4">{{ test.title }}</h1>
     <form method="post" action="{% url 'submit-test' test.id %}">
         {% csrf_token %}
         {% for question in questions %}
-        
         <div class="card mb-4 question-card">
             <div class="card-body">
-                <h5 class="card-title">Question {{ forloop.counter }}</h5>
+                <div class="d-flex justify-content-between align-items-start">
+                    <h5 class="card-title">Question {{ forloop.counter }}</h5>
+                    {% if is_staff %}
+                    <a href="{{ question.admin_url }}" 
+                       class="btn btn-sm btn-warning" 
+                       target="_blank"
+                       title="Edit in admin">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    {% endif %}
+                </div>
+                
                 <p class="card-text">{{ question.question_text|safe }}</p>
                 {% if question.image %}
                 <img src="{{ question.image.url }}" alt="Question Image" class="img-fluid mb-3">

@@ -5,6 +5,7 @@ from .models import MultipleChoiceQuestion, Test, UserAnswer, TestAttempt
 from .decorators import member_required, test_access_required
 from itertools import groupby
 from operator import attrgetter
+from django.urls import reverse
 
 
 from django.db.models import Case, When, Value, IntegerField
@@ -67,13 +68,26 @@ def select_test(request):
         'attempts': attempts
     })
     
+
 @test_access_required
 def start_test(request, pk):
     test = get_object_or_404(Test, pk=pk)
     questions = test.questions.all()
-    return render(request, 'homeworks/test_start.html', {'questions': questions, 'test': test})
-
-
+    
+    # Add admin URLs for each question if user is staff
+    if request.user.is_staff:
+        for question in questions:
+            # Generate the admin URL for editing this question
+            question.admin_url = reverse(
+                'admin:homeworks_multiplechoicequestion_change',
+                args=[question.id]
+            )
+    
+    return render(request, 'homeworks/test_start.html', {
+        'questions': questions,
+        'test': test,
+        'is_staff': request.user.is_staff
+    })
 
      
 @test_access_required
